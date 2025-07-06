@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile | Study Buddy Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: #f7f9fd;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #151520;
+      background-image: url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      transition: background-image 0.5s;
+    }
+    .topnav {
+      width: 100%;
+      background: #ffffff;
+      box-shadow: 0 2px 12px #e0e7ff33;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2em 3em 1.2em 2em;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-size: 2em;
+      font-weight: 700;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      letter-spacing: 1px;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 24px 0 28px 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    .main-tab {
+      background: #ffffff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 32px;
+      font-size: 1.13em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      min-width: 150px;
+      justify-content: center;
+    }
+    .main-tab.active,
+    .main-tab[aria-current="page"] {
+      background: #fff;
+      color: #222;
+      border-bottom: 2.5px solid #7b2ff2;
+      box-shadow: 0 4px 16px #e0e7ff44;
+      z-index: 1;
+    }
+    .main-tab:hover:not(.active):not([aria-current="page"]) {
+      background: #e0e7ff;
+      color: #6a5af9;
+    }
+    .user-nav-topright {
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      margin-left: 0.5em;
+      min-width: 0;
+      flex-shrink: 0;
+    }
+    .nav-username {
+      font-weight: 600;
+      color: #7b2ff2;
+      font-size: 1.05em;
+      max-width: 120px;
+      min-width: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .profile-avatar-nav {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: #7b2ff2;
+      font-weight: 700;
+      font-size: 1.15em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px solid #e0e7ff;
+      cursor: pointer;
+      transition: border 0.18s;
+      flex-shrink: 0;
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+    }
+    .profile-avatar-nav img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .logout-btn-nav {
+      background: #f8faff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      margin-left: 0.5em;
+      margin-right: 2.5em;
+      flex-shrink: 0;
+    }
+    .logout-btn-nav:hover {
+      background: #ffe0e7;
+      color: #d72660;
+    }
+    @media (max-width: 600px) {
+      .topnav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.7em;
+        padding: 0.7em 1em;
+      }
+      .user-nav-topright {
+        width: 100%;
+        justify-content: flex-end;
+        gap: 0.5em;
+        margin-left: 0;
+      }
+      .nav-username {
+        max-width: 70px;
+        font-size: 0.98em;
+      }
+      .main-tabs {
+        flex-wrap: wrap;
+        gap: 0.5em;
+        margin: 12px 0 18px 0;
+      }
+      .main-tab {
+        font-size: 1em;
+        padding: 8px 12px;
+        min-width: 80px;
+      }
+    }
+    .profile-menu-container {
+      max-width: 1100px;
+      margin: 40px auto 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 4px 24px #eaf0ff;
+      display: flex;
+      min-height: 600px;
+      overflow: hidden;
+    }
+    .profile-sidebar {
+      width: 240px;
+      background: #f6f8fc;
+      border-right: 1px solid #e0e7ff;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 0 0 0;
+      gap: 8px;
+    }
+    .profile-sidebar .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 32px;
+      font-size: 1.08em;
+      color: #7b2ff2;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 0 20px 20px 0;
+      transition: background 0.15s, color 0.15s;
+      font-weight: 600;
+    }
+    .profile-sidebar .sidebar-link.active,
+    .profile-sidebar .sidebar-link:focus,
+    .profile-sidebar .sidebar-link:hover {
+      background: #e0e7ff;
+      color: #4263eb;
+      outline: none;
+    }
+    .profile-content-area {
+      flex: 1;
+      padding: 40px 48px;
+      min-width: 0;
+      background: #ffffff;
+      position: relative;
+    }
+    @media (max-width: 900px) {
+      .profile-menu-container { flex-direction: column; }
+      .profile-sidebar { flex-direction: row; width: 100%; border-right: none; border-bottom: 1px solid #e0e7ff; padding: 0; }
+      .profile-sidebar .sidebar-link { border-radius: 0; flex: 1; justify-content: center; }
+      .profile-content-area { padding: 28px 8vw; }
+    }
+    @media (max-width: 600px) {
+      .profile-menu-container { border-radius: 0; box-shadow: none; }
+      .profile-content-area { padding: 18px 2vw; }
+    }
+    .profile-avatar-large {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: #7b2ff2;
+      font-weight: 700;
+      font-size: 2.5em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin: 0 auto 12px auto;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 12px #eaf0ff;
+      position: relative;
+    }
+    .profile-avatar-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    .edit-avatar-btn {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background: #7b2ff2;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1em;
+      box-shadow: 0 2px 8px #e0e7ff99;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s, transform 0.12s;
+      z-index: 3;
+      border: 2px solid #fff;
+      outline: none;
+    }
+    .edit-avatar-btn:hover, .edit-avatar-btn:focus {
+      background: #4263eb;
+      color: #ffe082;
+      transform: scale(1.08);
+    }
+    .edit-avatar-btn input[type="file"] {
+      display: none;
+    }
+    .profile-section-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #7b2ff2;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    .profile-section {
+      max-width: 420px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .profile-section label {
+      font-weight: 600;
+      color: #4263eb;
+      margin-bottom: 2px;
+      font-size: 1em;
+    }
+    .profile-section input,
+    .profile-section textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 7px;
+      border: 1.5px solid #e0e7ff;
+      font-size: 1em;
+      background: #f8faff;
+      margin-bottom: 8px;
+      transition: border 0.15s;
+      resize: none;
+    }
+    .profile-section input:focus,
+    .profile-section textarea:focus {
+      border: 1.5px solid #7b2ff2;
+      outline: none;
+    }
+    .profile-section .save-btn {
+      background: #7b2ff2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 0;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      width: 100%;
+    }
+    .profile-section .save-btn:hover {
+      background: #4263eb;
+    }
+    .profile-progress-bar-wrap {
+      width: 100%;
+      max-width: 340px;
+      margin: 18px auto 0 auto;
+    }
+    .profile-progress-bar-bg {
+      background: #e0e7ff;
+      border-radius: 8px;
+      height: 10px;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+    .profile-progress-bar-fill {
+      background: linear-gradient(90deg, #7b2ff2 0%, #4263eb 100%);
+      height: 10px;
+      border-radius: 8px;
+      width: 0%;
+      transition: width 0.4s;
+    }
+    .profile-progress-bar-text {
+      font-size: 0.98em;
+      color: #7b2ff2;
+      text-align: right;
+      margin-bottom: 0;
+      margin-top: 0;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 4px #7b2ff244;
+    }
+    .achievements-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+      margin-top: 18px;
+    }
+    .achievement-badge {
+      background: #f6f8fc;
+      border-radius: 12px;
+      padding: 18px 22px;
+      box-shadow: 0 2px 8px #eaf0ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+      max-width: 160px;
+      font-size: 1em;
+      color: #7b2ff2;
+      font-weight: 600;
+      gap: 8px;
+    }
+    .achievement-badge .fa {
+      font-size: 2em;
+      margin-bottom: 4px;
+      color: #ffe082;
+      text-shadow: 0 2px 8px #7b2ff244;
+    }
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 0.98em;
+      color: #444;
+    }
+    .activity-list li {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .activity-list .activity-time {
+      color: #aaa;
+      font-size: 0.93em;
+      margin-left: 4px;
+    }
+    .activity-list .fa {
+      color: #7b2ff2;
+      font-size: 1em;
+    }
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #7b2ff2;
+      color: #fff;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-size: 1.1em;
+      box-shadow: 0 2px 12px #e0e7ff99;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .toast.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="logo"><i class="fa-solid fa-book"></i> Study Buddy Hub</div>
+    <div class="user-nav-topright">
+      <span id="nav-username" class="nav-username"></span>
+      <span id="nav-avatar" class="profile-avatar-nav" tabindex="0"></span>
+      <button onclick="logout()" class="logout-btn-nav" title="Logout">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+  </nav>
+  <div class="main-tabs">
+    <a href="dashboard.html" class="main-tab"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="Planner.html" class="main-tab"><i class="fa-solid fa-calendar-check"></i> Study Planner</a>
+    <a href="groups.html" class="main-tab"><i class="fa-solid fa-users"></i> Study Groups</a>
+    <a href="notes.html" class="main-tab"><i class="fa-solid fa-book"></i> Notes</a>
+    <a href="discussions.html" class="main-tab"><i class="fa-solid fa-comments"></i> Discussions</a>
+    <a href="profile.html" class="main-tab active" aria-current="page"><i class="fa-solid fa-user"></i> Profile</a>
+  </div>
+  <div class="profile-menu-container">
+    <aside class="profile-sidebar">
+      <button class="sidebar-link active" id="menu-overview" tabindex="0"><i class="fa fa-user"></i> Overview</button>
+      <button class="sidebar-link" id="menu-settings" tabindex="0"><i class="fa fa-cog"></i> Settings</button>
+      <button class="sidebar-link" id="menu-achievements" tabindex="0"><i class="fa fa-trophy"></i> Achievements</button>
+      <button class="sidebar-link" id="menu-activity" tabindex="0"><i class="fa fa-list"></i> Activity</button>
+
+    </aside>
+    <main class="profile-content-area" id="profileContent">
+      <!-- Content will be loaded here -->
+    </main>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script>
+    // --- Profile Storage (per user by email) ---
+    function getCurrentUserKey() {
+      let email = null;
+      const profile = JSON.parse(localStorage.getItem('currentProfile') || 'null');
+      if (profile && profile.email) email = profile.email;
+      if (!email) email = localStorage.getItem('currentUserEmail');
+      return email ? 'profile_' + email.toLowerCase() : 'profile_default';
+    }
+    function getCurrentProfile() {
+      const key = getCurrentUserKey();
+      return JSON.parse(localStorage.getItem(key) || 'null');
+    }
+
+    // --- User Activity Tracking ---
+    function getUserActivity() {
+      const key = getCurrentUserKey() + '_activity';
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+    function addUserActivity(activity) {
+      const key = getCurrentUserKey() + '_activity';
+      const list = JSON.parse(localStorage.getItem(key) || '[]');
+      list.unshift({ ...activity, time: new Date().toISOString() });
+      localStorage.setItem(key, JSON.stringify(list.slice(0, 30)));
+    }
+    function setCurrentProfile(profile) {
+      const key = profile.email ? 'profile_' + profile.email.toLowerCase() : 'profile_default';
+      localStorage.setItem(key, JSON.stringify(profile));
+      localStorage.setItem('currentProfile', JSON.stringify(profile));
+      if (profile.email) localStorage.setItem('currentUserEmail', profile.email);
+      window.dispatchEvent(new Event('storage'));
+    }
+
+    // --- Avatar & Nav ---
+    function updateNavAvatar() {
+      const profile = getCurrentProfile();
+      const avatarEl = document.getElementById('nav-avatar');
+      const nameEl = document.getElementById('nav-username');
+      if (!avatarEl || !nameEl) return;
+      if (profile) {
+        nameEl.textContent = profile.name || '';
+        if (profile.avatar) {
+          avatarEl.innerHTML = `<img src="${profile.avatar}" alt="Avatar" onerror="this.onerror=null;this.parentNode.textContent='U';">`;
+        } else {
+          let initials = profile.name ? profile.name.trim()[0].toUpperCase() : 'U';
+          avatarEl.textContent = initials;
+        }
+      } else {
+        nameEl.textContent = '';
+        avatarEl.textContent = 'U';
+      }
+    }
+    window.addEventListener('DOMContentLoaded', updateNavAvatar);
+    window.addEventListener('storage', updateNavAvatar);
+
+    // --- Main Tabs Active Highlight ---
+    document.querySelectorAll('.main-tab').forEach(tab => {
+      if (window.location.pathname.endsWith(tab.getAttribute('href'))) {
+        tab.classList.add('active');
+        tab.setAttribute('aria-current', 'page');
+      } else {
+        tab.classList.remove('active');
+        tab.removeAttribute('aria-current');
+      }
+    });
+
+    // --- Profile Menu Logic ---
+    const menuLinks = [
+      { id: "menu-overview", render: renderOverview },
+      { id: "menu-settings", render: renderSettings },
+      { id: "menu-achievements", render: renderAchievements },
+      { id: "menu-activity", render: renderActivity },
+
+    ];
+    menuLinks.forEach(link => {
+      document.getElementById(link.id).onclick = function() {
+        document.querySelectorAll('.sidebar-link').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        link.render();
+      };
+      document.getElementById(link.id).onkeydown = function(e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          this.click();
+        }
+      };
+    });
+
+    // --- Render Functions ---
+    function renderOverview() {
+      const profile = getCurrentProfile() || {};
+      document.getElementById('profileContent').innerHTML = `
+        <div class="profile-avatar-large" style="position:relative;">
+          ${profile.avatar ? `<img id="profileAvatarImg" src="${profile.avatar}" alt="Avatar" onerror="this.onerror=null;this.parentNode.textContent='U';">` : (profile.name ? profile.name[0].toUpperCase() : 'U')}
+          <label class="edit-avatar-btn" for="editPhotoInput" title="Upload new photo" tabindex="0">
+            <i class="fa fa-camera"></i>
+            <input type="file" id="editPhotoInput" accept="image/png, image/jpeg, image/jpg, image/gif, image/webp, image/svg+xml, image/bmp, image/x-icon, image/tiff, image/*" style="display:none;">
+          </label>
+        </div>
+        <div class="profile-section-title">${profile.name || ''}</div>
+        <div style="text-align:center;color:#888;margin-bottom:8px;">${profile.email || ''}</div>
+        <div style="text-align:center;font-style:italic;margin-bottom:12px;">${profile.bio || 'No bio yet.'}</div>
+        <div class="profile-progress-bar-wrap">
+          <div class="profile-progress-bar-bg">
+            <div id="profileProgressBar" class="profile-progress-bar-fill"></div>
+          </div>
+          <div id="profileProgressText" class="profile-progress-bar-text"></div>
+        </div>
+      `;
+      updateProfileProgress(profile);
+
+      // Always re-attach the event listener after rendering
+      const photoInput = document.getElementById('editPhotoInput');
+      if (photoInput) {
+        photoInput.addEventListener('change', function() {
+          if (this.files.length > 0) {
+            const file = this.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+              let profile = getCurrentProfile() || {};
+              profile.avatar = e.target.result;
+              setCurrentProfile(profile);
+              updateNavAvatar();
+              renderOverview();
+              showToast("Profile photo updated!");
+            }
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+    }
+    function renderSettings() {
+      const profile = getCurrentProfile() || {};
+      document.getElementById('profileContent').innerHTML = `
+        <form class="profile-section" id="settingsForm" autocomplete="off">
+          <div class="profile-section-title">Settings</div>
+          <label for="editName">Name</label>
+          <input type="text" id="editName" value="${profile.name || ''}" required>
+          <label for="editEmail">Email</label>
+          <input type="email" id="editEmail" value="${profile.email || ''}" required>
+          <label for="editBio">Bio</label>
+          <textarea id="editBioInput" rows="3" maxlength="120" placeholder="Tell us about yourself...">${profile.bio || ''}</textarea>
+          <button class="save-btn" type="submit">Save</button>
+        </form>
+      `;
+      document.getElementById('settingsForm').onsubmit = function(e) {
+        e.preventDefault();
+        saveProfile();
+      };
+    }
+    function renderAchievements() {
+      const achievements = [
+        { icon: "fa-star", label: "Joined Study Buddy", desc: "Welcome to the platform!" },
+        { icon: "fa-book", label: "First Note", desc: "Uploaded your first note." },
+        { icon: "fa-users", label: "Group Member", desc: "Joined a study group." },
+        { icon: "fa-comments", label: "Active Discussant", desc: "Posted in discussions." }
+      ];
+      document.getElementById('profileContent').innerHTML = `
+        <div class="profile-section-title">Achievements</div>
+        <div class="achievements-list">
+          ${achievements.map(a => `
+            <div class="achievement-badge">
+              <i class="fa ${a.icon}"></i>
+              <div>${a.label}</div>
+              <div style="font-size:0.95em;color:#888;">${a.desc}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+    function renderActivity() {
+      const activity = getUserActivity();
+      function timeAgo(iso) {
+        const now = new Date();
+        const then = new Date(iso);
+        const diff = Math.floor((now - then) / 1000);
+        if (diff < 60) return 'just now';
+        if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+        if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
+        if (diff < 604800) return Math.floor(diff/86400) + ' day' + (Math.floor(diff/86400) > 1 ? 's' : '') + ' ago';
+        return then.toLocaleDateString();
+      }
+      document.getElementById('profileContent').innerHTML = `
+        <div class="profile-section-title">Recent Activity</div>
+        <ul class="activity-list">
+          ${activity.length === 0 ? '<li style=\"color:#aaa;\">No activity yet.</li>' : activity.map(a => `
+            <li><i class=\"fa ${a.icon}\"></i> ${a.text} <span class=\"activity-time\">${timeAgo(a.time)}</span></li>
+          `).join('')}
+        </ul>
+      `;
+    }
+
+
+    // --- Profile Progress ---
+    function updateProfileProgress(profile) {
+      const fields = ['name', 'email', 'bio', 'avatar'];
+      let filled = fields.filter(f => profile[f] && profile[f].toString().trim() !== '').length;
+      let percent = Math.round((filled / fields.length) * 100);
+      document.getElementById('profileProgressBar').style.width = percent + '%';
+      document.getElementById('profileProgressText').textContent = `Profile ${percent}% complete`;
+    }
+
+    // --- Save Profile ---
+    function saveProfile() {
+      const oldProfile = getCurrentProfile() || {};
+      const newProfile = {
+        name: document.getElementById('editName').value.trim(),
+        email: document.getElementById('editEmail').value.trim(),
+        bio: document.getElementById('editBioInput').value.trim(),
+        avatar: oldProfile.avatar || ""
+      };
+      setCurrentProfile(newProfile);
+      updateNavAvatar();
+      renderOverview();
+      showToast("Profile updated!");
+    }
+
+
+
+    // --- Toast ---
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    // --- Initial Load ---
+    document.addEventListener('DOMContentLoaded', function() {
+      let profile = getCurrentProfile();
+      if (!profile) {
+        profile = {
+          name: "Your Name",
+          email: "your@email.com",
+          bio: "",
+          avatar: ""
+        };
+        setCurrentProfile(profile);
+      }
+      renderOverview();
+    });
+
+    // --- Dummy Logout
+    function logout() {
+      // For demo, just clear the current profile
+      localStorage.removeItem('currentProfile');
+      localStorage.removeItem('currentUserEmail');
+      updateNavAvatar();
+      showToast("Logged out successfully!");
+      setTimeout(() => {
+        window.location.href = 'login.html'; // Redirect to login page (dummy)
+      }, 1000);
+    }
+
+    document.body.style.backgroundImage = "none";
+    //
+  </script>
+</body>
+</html>

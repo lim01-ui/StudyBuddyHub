@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Groups - Study Buddy Hub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Replace the body background with your image */
+    body {
+      background: #f7f9fd;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      color: #222;
+      background-image: url('https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&w=1920&q=80'); /* Group at table, clear focus, high isolation */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      transition: background-image 0.5s;
+    }
+    .topnav {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 12px #e0e7ff33;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2em 3em 1.2em 2em;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-size: 2em;
+      font-weight: 700;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      letter-spacing: 1px;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 24px 0 28px 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    .main-tab {
+      background: #f0f4ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 32px;
+      font-size: 1.13em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      min-width: 150px;
+      justify-content: center;
+    }
+    .main-tab.active,
+    .main-tab[aria-current="page"] {
+      background: #fff;
+      color: #222;
+      border-bottom: 2.5px solid #7b2ff2;
+      box-shadow: 0 4px 16px #e0e7ff44;
+      z-index: 1;
+    }
+    .main-tab:hover:not(.active):not([aria-current="page"]) {
+      background: #e0e7ff;
+      color: #6a5af9;
+    }
+    .groups-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1em;
+    }
+    .groups-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 2em;
+      margin-bottom: 1.5em;
+    }
+    .groups-header-title {
+      font-size: 2em;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 0.2em;
+    }
+    .groups-header-subtitle {
+      color: #222;
+      font-size: 1.15em;
+      margin-top: 0.3em;
+    }
+    .create-group-btn {
+      background: #7b2ff2;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.8em 2em;
+      font-size: 1.1em;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+    }
+    .create-group-btn i {
+      font-size: 1.1em;
+    }
+    .create-group-btn:hover {
+      background: #111c2b;
+    }
+    .groups-list-title {
+      font-size: 1.3em;
+      font-weight: 600;
+      margin-bottom: 1em;
+      margin-left: 0.2em;
+      color: #222;
+    }
+    .groups-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2em;
+    }
+    .group-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #e0e7ff22;
+      border: 1px solid #e0e7ff;
+      padding: 1.5em 1.5em 1.2em 1.5em;
+      min-width: 270px;
+      max-width: 320px;
+      flex: 1 1 270px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: box-shadow 0.2s;
+    }
+    .group-card:hover {
+      box-shadow: 0 4px 24px #7b2ff233;
+    }
+    .group-card-title {
+      font-size: 1.18em;
+      font-weight: 700;
+      margin-bottom: 0.5em;
+      color: #222;
+    }
+    .group-card-category {
+      display: inline-block;
+      background: #f4f7fe;
+      color: #7b2ff2;
+      font-size: 0.98em;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.2em 1em;
+      margin-bottom: 0.7em;
+    }
+    .group-card-desc {
+      color: #7b809a;
+      font-size: 1em;
+      margin-bottom: 1.2em;
+    }
+    .group-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+    .group-card-members {
+      color: #7b809a;
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    .group-card-members i {
+      color: #7b2ff2;
+    }
+    .join-btn, .leave-btn {
+      background: #7b2ff2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5em 1.5em;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .join-btn:hover {
+      background: #111c2b;
+    }
+    .leave-btn {
+      background: #e74c3c;
+    }
+    .leave-btn:hover {
+      background: #c0392b;
+    }
+    .group-card .owner-badge {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      background: #1db954;
+      color: #fff;
+      font-size: 0.9em;
+      font-weight: 600;
+      border-radius: 7px;
+      padding: 0.2em 0.8em;
+      letter-spacing: 0.5px;
+    }
+    .group-card .joined-badge {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      background: #7b2ff2;
+      color: #fff;
+      font-size: 0.9em;
+      font-weight: 600;
+      border-radius: 7px;
+      padding: 0.2em 0.8em;
+      letter-spacing: 0.5px;
+    }
+    .group-number-badge {
+      display: inline-block;
+      background: #e0e7ff;
+      color: #7b2ff2;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 2em;
+      height: 2em;
+      text-align: center;
+      line-height: 2em;
+      margin-left: 12px;
+      font-size: 1em;
+      vertical-align: middle;
+      box-shadow: 0 1px 4px #e0e7ff44;
+    }
+    /* Modal */
+    .modal-bg {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.18);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 32px #7b2ff244;
+      padding: 2em 2.5em;
+      min-width: 320px;
+      max-width: 95vw;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2em;
+      position: relative;
+    }
+    .modal-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      margin-bottom: 0.2em;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1em;
+      right: 1em;
+      background: none;
+      border: none;
+      font-size: 1.3em;
+      color: #aaa;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .modal-close:hover {
+      color: #e74c3c;
+    }
+    .modal input, .modal textarea, .modal select {
+      width: 100%;
+      font-size: 1.05em;
+      padding: 0.7em 1em;
+      border-radius: 8px;
+      border: 1.5px solid #e0e7ff;
+      background: #f7fafd;
+      margin-bottom: 0.2em;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 1em;
+      margin-top: 1em;
+    }
+    .modal .create-btn {
+      background: #7b2ff2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7em 2em;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .modal .create-btn:hover {
+      background: #111c2b;
+    }
+    .modal .cancel-btn {
+      background: #fff;
+      color: #222;
+      border: 1.5px solid #e0e7ff;
+      border-radius: 8px;
+      padding: 0.7em 2em;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal .cancel-btn:hover {
+      background: #f7fafd;
+      color: #7b2ff2;
+    }
+    /* Add chat styles */
+    .group-chat-container {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #e0e7ff22;
+      border: 1px solid #e0e7ff;
+      margin-top: 2em;
+      padding: 1.5em;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .chat-header {
+      font-size: 1.2em;
+      font-weight: 700;
+      margin-bottom: 1em;
+      display: flex;
+      align-items: center;
+      gap: 0.7em;
+    }
+    .chat-messages {
+      min-height: 120px;
+      max-height: 260px;
+      overflow-y: auto;
+      margin-bottom: 1em;
+      padding-right: 0.5em;
+    }
+    .chat-message {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8em;
+      margin-bottom: 1em;
+    }
+    .chat-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1em;
+      font-weight: 700;
+      color: #7b2ff2;
+      overflow: hidden;
+    }
+    .chat-content {
+      background: #f7fafd;
+      border-radius: 10px;
+      padding: 0.7em 1em;
+      font-size: 1em;
+      color: #222;
+      max-width: 420px;
+      word-break: break-word;
+    }
+    .chat-meta {
+      font-size: 0.9em;
+      color: #7b809a;
+      margin-bottom: 0.2em;
+      font-weight: 600;
+    }
+    .chat-input-row {
+      display: flex;
+      gap: 0.7em;
+      margin-top: 1em;
+    }
+    .chat-input {
+      flex: 1;
+      padding: 0.7em 1em;
+      border-radius: 8px;
+      border: 1.5px solid #e0e7ff;
+      font-size: 1em;
+      background: #f7fafd;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .chat-input:focus {
+      border: 1.5px solid #7b2ff2;
+      background: #fff;
+    }
+    .chat-send-btn {
+      background: #7b2ff2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.7em 1.5em;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .chat-send-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .invite-section {
+      margin-top: 2em;
+      background: #f7fafd;
+      border-radius: 10px;
+      padding: 1em 1.5em;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-bottom: 2em;
+      border: 1px solid #e0e7ff;
+    }
+    .invite-title {
+      font-weight: 600;
+      margin-bottom: 0.5em;
+    }
+    .invite-row {
+      display: flex;
+      gap: 0.7em;
+      margin-bottom: 0.7em;
+    }
+    .invite-input {
+      flex: 1;
+      padding: 0.6em 1em;
+      border-radius: 8px;
+      border: 1.5px solid #e0e7ff;
+      font-size: 1em;
+      background: #fff;
+      outline: none;
+    }
+    .invite-btn {
+      background: #1db954;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.6em 1.5em;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .invite-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .invite-list {
+      margin-top: 0.5em;
+      font-size: 0.98em;
+      color: #7b809a;
+    }
+    .invite-list span {
+      background: #e0e7ff;
+      color: #7b2ff2;
+      border-radius: 7px;
+      padding: 0.2em 0.7em;
+      margin-right: 0.5em;
+      display: inline-block;
+      margin-bottom: 0.3em;
+    }
+    .group-members-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      align-items: center;
+      margin-bottom: 1em;
+      background: #f7fafd;
+      border-radius: 8px;
+      padding: 0.7em 1em;
+    }
+    .group-member {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      font-size: 1em;
+      background: #fff;
+      border-radius: 6px;
+      padding: 0.2em 0.7em 0.2em 0.2em;
+      box-shadow: 0 1px 4px #e0e7ff22;
+    }
+    .group-member img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e0e7ff;
+    }
+    .group-member.owner {
+      font-weight: bold;
+      color: #1db954;
+    }
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 2em 0 1em 0;
+    }
+    .page-btn {
+      padding: 0.5em 1.2em;
+      border-radius: 7px;
+      border: none;
+      background: #f0f4ff;
+      color: #7b2ff2;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .page-btn:hover {
+      background: #7b2ff2;
+      color: #fff;
+    }
+  </style>
+  <!-- Add this at the top of <head> in every page -->
+  <script>
+    // Apply dark mode before page renders
+    if (localStorage.getItem("theme") === "dark") {
+      document.documentElement.classList.add("dark");
+      document.body && document.body.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      document.body && document.body.classList.remove("dark");
+    }
+  </script>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="logo"><i class="fa-solid fa-book"></i> <span style="color:#7b2ff2">Study Buddy Hub</span></div>
+  </nav>
+  <div class="main-tabs">
+    <a href="dashboard.html" class="main-tab"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="Planner.html" class="main-tab"><i class="fa-solid fa-calendar-check"></i> Study Planner</a>
+    <a href="groups.html" class="main-tab active" aria-current="page"><i class="fa-solid fa-users"></i> Study Groups</a>
+    <a href="notes.html" class="main-tab"><i class="fa-solid fa-book"></i> Notes</a>
+    <a href="discussions.html" class="main-tab"><i class="fa-solid fa-comments"></i> Discussions</a>
+    <a href="profile.html" class="main-tab"><i class="fa-solid fa-user"></i> Profile</a>
+  </div>
+  <div class="groups-container">
+    <div class="groups-header">
+      <div>
+        <div class="groups-header-title">Study Groups</div>
+        <div class="groups-header-subtitle">Join existing groups or create your own</div>
+      </div>
+      <button class="create-group-btn" id="createGroupBtn"><i class="fa-solid fa-plus"></i> Create Group</button>
+    </div>
+    <div class="groups-list-title">Available Groups</div>
+    <div class="groups-list" id="groupsList"></div>
+    <!-- --- Add this for pagination --- -->
+    <div id="paginationWrap"></div>
+  </div>
+  <!-- Modal for creating group -->
+  <div class="modal-bg" id="modalBg">
+    <form class="modal" id="createGroupForm" autocomplete="off">
+      <button type="button" class="modal-close" id="closeModalBtn"><i class="fa-solid fa-xmark"></i></button>
+      <div class="modal-title">Create New Group</div>
+      <input type="text" id="newGroupName" placeholder="Group name" required>
+      <select id="newGroupCategory" required>
+        <option value="">Select category</option>
+        <option value="Mathematics">Mathematics</option>
+        <option value="Computer Science">Computer Science</option>
+        <option value="Physics">Physics</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Biology">Biology</option>
+        <option value="Other">Other</option>
+      </select>
+      <textarea id="newGroupDesc" placeholder="Short description" rows="2" required></textarea>
+      <div class="modal-actions">
+        <button type="submit" class="create-btn">Create</button>
+        <button type="button" class="cancel-btn" id="cancelModalBtn">Cancel</button>
+      </div>
+    </form>
+  </div>
+  <div class="group-chat-container" id="groupChatContainer" style="display:none;">
+    <div class="chat-header">
+      <i class="fa-solid fa-comments"></i>
+      <span id="chatGroupName">Group Chat</span>
+      <button id="toggleMembersBtn" style="margin-left:auto; background:#e0e7ff; color:#7b2ff2; border:none; border-radius:7px; padding:0.4em 1.2em; font-weight:600; cursor:pointer;">
+        <i class="fa-solid fa-users"></i> View Members
+      </button>
+    </div>
+    <div class="group-members-list" id="groupMembersList" style="margin-bottom:1em; display:none;">
+      <!-- Members will be rendered here -->
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-input-row" id="chatForm">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." autocomplete="off" required>
+      <button type="submit" class="chat-send-btn" id="chatSendBtn">Send</button>
+    </form>
+  </div>
+  <div class="invite-section" id="inviteSection" style="display:none;">
+    <div class="invite-title">Invite Friends to Group</div>
+    <form class="invite-row" id="inviteForm">
+      <input type="text" class="invite-input" id="inviteInput" placeholder="Enter friend's name or email" required>
+      <button type="submit" class="invite-btn">Invite</button>
+    </form>
+    <div class="invite-list" id="inviteList"></div>
+  </div>
+  <script>
+    // Demo user
+    const currentUser = "Venglim";
+    // Demo initial groups
+    const defaultGroups = [
+      {
+        name: "Calculus Study Group",
+        category: "Mathematics",
+        desc: "Advanced calculus problem solving",
+        members: 12,
+        joined: false,
+        owner: false
+      },
+      {
+        name: "Data Structures & Algorithms",
+        category: "Computer Science",
+        desc: "Weekly coding practice sessions",
+        members: 8,
+        joined: false,
+        owner: false
+      },
+      {
+        name: "Organic Chemistry Lab",
+        category: "Chemistry",
+        desc: "Lab prep and reaction mechanisms",
+        members: 15,
+        joined: false,
+        owner: false
+      },
+      {
+        name: "Modern Physics Discussion",
+        category: "Physics",
+        desc: "Quantum mechanics and relativity",
+        members: 6,
+        joined: false,
+        owner: false
+      }
+    ];
+    // Utility to generate random group names/categories/titles
+    function getRandomGroup(idx, usedNames) {
+      const categories = [
+        "Mathematics", "Computer Science", "Physics", "Chemistry", "Biology",
+        "History", "Art", "Music", "Economics", "Literature"
+      ];
+      const titlesByCategory = {
+        "Mathematics": ["Math Wizards", "Calculus Crew", "Algebra Avengers", "Number Ninjas"],
+        "Computer Science": ["Code Crusaders", "Algorithm Army", "Creative Coders", "Binary Brigade"],
+        "Physics": ["Physics Phenoms", "Quantum Explorers", "Modern Mechanics", "Relativity Rebels"],
+        "Chemistry": ["Chem Champs", "Reaction Masters", "Molecule Makers", "Lab Legends"],
+        "Biology": ["Bio Brains", "Cell Squad", "Genetics Gurus", "Life Science League"],
+        "History": ["History Hunters", "Past Masters", "Chronicle Crew", "Time Travelers"],
+        "Art": ["Artistry Alliance", "Creative Canvas", "Palette Pals", "Design Dreamers"],
+        "Music": ["Music Masters", "Harmony Heroes", "Rhythm Rookies", "Melody Makers"],
+        "Economics": ["Econ Experts", "Market Minds", "Finance Friends", "Trade Troop"],
+        "Literature": ["Literary Legends", "Book Buffs", "Poetry Pioneers", "Story Squad"]
+      };
+      const descs = [
+        "Let's master this subject together!",
+        "Weekly sessions and Q&A.",
+        "Share notes and solve problems.",
+        "Open to all levels.",
+        "Exam prep and study tips.",
+        "Fun and interactive group.",
+        "Bring your questions!",
+        "Collaborative learning.",
+        "Project-based discussions.",
+        "Peer support and resources."
+      ];
+      // Pick a random category and title
+      let name, category, title;
+      let tries = 0;
+      do {
+        category = categories[Math.floor(Math.random() * categories.length)];
+        title = titlesByCategory[category][Math.floor(Math.random() * titlesByCategory[category].length)];
+        // Add a unique suffix to help guarantee uniqueness
+        name = `${title} (${category}) #${Math.floor(Math.random() * 10000)}`;
+        tries++;
+        if (tries > 20) break; // fallback to avoid infinite loop
+      } while (usedNames && usedNames.has(name));
+      // Generate random members
+      // Use realistic names and ensure uniqueness
+      const firstNames = [
+        "Alice", "Bob", "Carol", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack",
+        "Kathy", "Leo", "Mona", "Nina", "Oscar", "Paul", "Quinn", "Rita", "Sam", "Tina",
+        "Uma", "Victor", "Wendy", "Xander", "Yara", "Zane", "Brian", "Chloe", "Derek", "Ella",
+        "Felix", "Gina", "Hugo", "Isabel", "Jonas", "Kira", "Liam", "Megan", "Noah", "Olivia",
+        "Peter", "Queen", "Ryan", "Sophie", "Tom", "Ursula", "Vera", "Will", "Xenia", "Yusuf"
+      ];
+      const lastNames = [
+        "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Martinez", "Lopez",
+        "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson",
+        "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker", "Young", "Allen",
+        "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores", "Green", "AdAMS", "Nelson",
+        "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts", "Gomez", "Phillips", "Evans"
+      ];
+
+      // Shuffle helper
+      function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+      }
+
+      // Generate unique full names
+      const memberCount = Math.floor(Math.random() * 86) + 15; // 15-100
+      const totalCombos = firstNames.length * lastNames.length;
+      const usedCombos = new Set();
+      const shuffledFirst = shuffle([...firstNames]);
+      const shuffledLast = shuffle([...lastNames]);
+      const members = [];
+      let comboIdx = 0;
+      for (let i = 0; i < memberCount; i++) {
+        // Guarantee unique combinations
+        let fname = shuffledFirst[i % shuffledFirst.length];
+        let lname = shuffledLast[Math.floor(i / shuffledFirst.length) % shuffledLast.length];
+        let fullName = `${fname} ${lname}`;
+        // If we run out of combos, add a number
+        if (usedCombos.has(fullName)) {
+          fullName += " " + (i + 1);
+        }
+        usedCombos.add(fullName);
+        members.push({
+          name: fullName,
+          email: `${fname.toLowerCase()}.${lname.toLowerCase()}${i}@school.edu`,
+          avatar: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${(idx * 3 + i) % 99}.jpg`
+        });
+      }
+
+      return {
+        name: name,
+        category: category,
+        desc: descs[Math.floor(Math.random() * descs.length)],
+        members: memberCount,
+        joined: false,
+        owner: false,
+        randomMembers: members // for initial groupData
+      };
+    }
+    // Only generate random groups if not already present
+    function ensureRandomGroups() {
+      let groups = loadGroups();
+      if (groups.length < 100) {
+        groups = [];
+        const usedNames = new Set();
+        let i = 0;
+        while (groups.length < 100) {
+          const group = getRandomGroup(i, usedNames);
+          if (!usedNames.has(group.name)) {
+            groups.push(group);
+            usedNames.add(group.name);
+          }
+          i++;
+          // Safety: break if too many attempts (should never happen)
+          if (i > 300) break;
+        }
+        saveGroups(groups);
+        // Also initialize groupData for each group with random members
+        const groupData = {};
+        groups.forEach(g => {
+          groupData[g.name] = {
+            members: g.randomMembers,
+            chat: [],
+            invites: []
+          };
+        });
+        localStorage.setItem('groupData', JSON.stringify(groupData));
+      }
+    }
+    ensureRandomGroups();
+    // --- Ensure all groups have at least 29 fake members on page load ---
+    (function ensureAllGroupsHaveFakeMembers() {
+      let groupData = JSON.parse(localStorage.getItem('groupData') || '{}');
+      let groups = loadGroups();
+      let changed = false;
+      groups.forEach(g => {
+        let gd = groupData[g.name] || { members: [], chat: [], invites: [] };
+        // Find real users (not fake, i.e., not in the fake member name list)
+        const realUserNames = gd.members
+          .filter(m => m && m.name && m.email && !m.email.endsWith('@school.edu'))
+          .map(m => m.name);
+        ensureFakeMembers(gd, realUserNames);
+        if (!groupData[g.name] || gd.members.length !== groupData[g.name].members.length) {
+          groupData[g.name] = gd;
+          g.members = gd.members.length;
+          changed = true;
+        }
+      });
+      if (changed) {
+        localStorage.setItem('groupData', JSON.stringify(groupData));
+        saveGroups(groups);
+      }
+    })();
+    // Ensure all groups have at least 29 fake members (besides real users) on page load
+    (function ensureAllGroupsHaveFakeMembers() {
+      const groupDataAll = JSON.parse(localStorage.getItem('groupData') || '{}');
+      let changed = false;
+      const FAKE_MEMBER_COUNT = 29;
+      const firstNames = [
+        "Alice", "Bob", "Carol", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack",
+        "Kathy", "Leo", "Mona", "Nina", "Oscar", "Paul", "Quinn", "Rita", "Sam", "Tina",
+        "Uma", "Victor", "Wendy", "Xander", "Yara", "Zane", "Brian", "Chloe", "Derek", "Ella",
+        "Felix", "Gina", "Hugo", "Isabel", "Jonas", "Kira", "Liam", "Megan", "Noah", "Olivia",
+        "Peter", "Queen", "Ryan", "Sophie", "Tom", "Ursula", "Vera", "Will", "Xenia", "Yusuf"
+      ];
+      const lastNames = [
+        "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Martinez", "Lopez",
+        "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson",
+        "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker", "Young", "Allen",
+        "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores", "Green", "AdAMS", "Nelson",
+        "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts", "Gomez", "Phillips", "Evans"
+      ];
+      Object.keys(groupDataAll).forEach(groupName => {
+        const group = groupDataAll[groupName];
+        // Find all real users (not fake, i.e. not in the fake name list)
+        const realUsers = group.members.filter(m => {
+          // If the name is not in the fake name list, treat as real
+          return !firstNames.some(fn => m.name && m.name.startsWith(fn + ' '));
+        });
+        // Remove all fake members
+        group.members = realUsers;
+        // Add fake members if needed
+        const usedNames = new Set(group.members.map(m => m.name));
+        let added = 0;
+        for (let i = 0; added < FAKE_MEMBER_COUNT; i++) {
+          let fname = firstNames[i % firstNames.length];
+          let lname = lastNames[Math.floor(i / firstNames.length) % lastNames.length];
+          let fullName = `${fname} ${lname}`;
+          if (usedNames.has(fullName)) continue;
+          usedNames.add(fullName);
+          group.members.push({
+            name: fullName,
+            email: `${fname.toLowerCase()}.${lname.toLowerCase()}${i}@school.edu`,
+            avatar: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${(i * 3) % 99}.jpg`
+          });
+          added++;
+        }
+        changed = true;
+      });
+      if (changed) {
+        localStorage.setItem('groupData', JSON.stringify(groupDataAll));
+        // Also update the summary member count in studyGroups
+        let groupsArr = loadGroups();
+        let updated = false;
+        groupsArr.forEach(g => {
+          if (groupDataAll[g.name] && groupDataAll[g.name].members.length !== g.members) {
+            g.members = groupDataAll[g.name].members.length;
+            updated = true;
+          }
+        });
+        if (updated) saveGroups(groupsArr);
+      }
+    })();
+    // Load groups from localStorage or use default
+    function loadGroups() {
+      const data = localStorage.getItem('studyGroups');
+      return data ? JSON.parse(data) : defaultGroups;
+    }
+    function saveGroups(groups) {
+      localStorage.setItem('studyGroups', JSON.stringify(groups));
+    }
+    let groups = loadGroups();
+
+    // --- Pagination logic ---
+    let currentPage = 1;
+    const groupsPerPage = 10;
+
+    function renderPagination(totalGroups) {
+      const totalPages = Math.ceil(totalGroups / groupsPerPage);
+      let html = '<div class="pagination" style="display:flex;justify-content:center;gap:8px;margin:2em 0 1em 0;">';
+      for (let i = 1; i <= totalPages; i++) {
+        html += `<button class="page-btn" data-page="${i}" style="padding:0.5em 1.2em;border-radius:7px;border:none;background:${i===currentPage?'#7b2ff2':'#f0f4ff'};color:${i===currentPage?'#fff':'#7b2ff2'};font-weight:600;cursor:pointer;">${i}</button>`;
+      }
+      html += '</div>';
+      document.getElementById('paginationWrap').innerHTML = html;
+      document.querySelectorAll('.page-btn').forEach(btn => {
+        btn.onclick = function() {
+          currentPage = Number(btn.getAttribute('data-page'));
+          renderGroups();
+        };
+      });
+    }
+
+    // --- Modify renderGroups to use pagination ---
+    function renderGroups() {
+      groups = loadGroups();
+      const list = document.getElementById('groupsList');
+      list.innerHTML = '';
+      if (groups.length === 0) {
+        list.innerHTML = '<div style="color:#aaa;font-size:1.1em;">No groups available. Create one!</div>';
+        return;
+      }
+      // Pagination
+      const start = (currentPage - 1) * groupsPerPage;
+      const end = start + groupsPerPage;
+      const pageGroups = groups.slice(start, end);
+
+      pageGroups.forEach((g, idx) => {
+        const globalIdx = start + idx;
+        const groupData = getGroupData(g.name);
+        const memberCount = groupData.members.length || 1;
+        let memberAvatars = '';
+        if (groupData.members && groupData.members.length > 0) {
+          memberAvatars = groupData.members.slice(0, 3).map(m =>
+            `<img src="${m.avatar}" alt="${m.name}" title="${m.name}" style="width:22px;height:22px;border-radius:50%;margin-right:-7px;border:2px solid #fff;box-shadow:0 1px 2px #e0e7ff44;">`
+          ).join('');
+          if (groupData.members.length > 3) {
+            memberAvatars += `<span style="margin-left:4px;font-size:0.95em;color:#7b809a;">+${groupData.members.length - 3}</span>`;
+          }
+        }
+        const isMember = groupData.members.some(m => m.name === currentUser);
+        list.innerHTML += `
+          <div class="group-card" data-idx="${globalIdx}" style="cursor:${g.joined ? 'pointer' : 'default'};">
+            <div class="group-card-title">${g.name}</div>
+            <div class="group-card-category">${g.category}</div>
+            <div class="group-card-desc">${g.desc}</div>
+            <div class="group-card-footer">
+              <div class="group-card-members">
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;">
+                  ${memberAvatars}
+                  <i class="fa-solid fa-users" style="margin-left:7px;"></i> ${memberCount} member${memberCount > 1 ? 's' : ''}
+                </span>
+              </div>
+              ${
+                g.owner
+                  ? `<button class="leave-btn" data-leave="${globalIdx}">Leave</button>`
+                  : g.joined
+                    ? `<button class="leave-btn" data-leave="${globalIdx}">Leave</button>`
+                    : `<button class="join-btn" data-join="${globalIdx}">Join</button>`
+              }
+              <span class="group-number-badge">${globalIdx + 1}</span>
+            </div>
+            ${g.owner ? `<div class="owner-badge">Owner</div>` : (isMember ? `<div class="joined-badge">Joined</div>` : "")}
+          </div>
+        `;
+      });
+
+      // Attach event listeners after rendering
+      document.querySelectorAll('.group-card').forEach(card => {
+        const idx = Number(card.getAttribute('data-idx'));
+        card.onclick = function(e) {
+          if (e.target.closest('button')) return;
+          openGroupChat(idx);
+        };
+      });
+      document.querySelectorAll('[data-join]').forEach(btn => {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          joinGroup(Number(btn.getAttribute('data-join')));
+        };
+      });
+      document.querySelectorAll('[data-leave]').forEach(btn => {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          leaveGroup(Number(btn.getAttribute('data-leave')));
+        };
+      });
+
+      // Render pagination
+      renderPagination(groups.length);
+    }
+// --- Helper to ensure each group always has at least 29 fake members (besides real users) ---
+function ensureFakeMembers(groupData, realUserNames) {
+  const FAKE_MEMBER_COUNT = 29;
+  const firstNames = [
+    "Alice", "Bob", "Carol", "David", "Emma", "Frank", "Grace", "Henry", "Ivy", "Jack",
+    "Kathy", "Leo", "Mona", "Nina", "Oscar", "Paul", "Quinn", "Rita", "Sam", "Tina",
+    "Uma", "Victor", "Wendy", "Xander", "Yara", "Zane", "Brian", "Chloe", "Derek", "Ella",
+    "Felix", "Gina", "Hugo", "Isabel", "Jonas", "Kira", "Liam", "Megan", "Noah", "Olivia",
+    "Peter", "Queen", "Ryan", "Sophie", "Tom", "Ursula", "Vera", "Will", "Xenia", "Yusuf"
+  ];
+  const lastNames = [
+    "Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Martinez", "Lopez",
+    "Wilson", "Anderson", "Thomas", "Taylor", "Moore", "Jackson", "Martin", "Lee", "Perez", "Thompson",
+    "White", "Harris", "Sanchez", "Clark", "Ramirez", "Lewis", "Robinson", "Walker", "Young", "Allen",
+    "King", "Wright", "Scott", "Torres", "Nguyen", "Hill", "Flores", "Green", "AdAMS", "Nelson",
+    "Baker", "Hall", "Rivera", "Campbell", "Mitchell", "Carter", "Roberts", "Gomez", "Phillips", "Evans"
+  ];
+  // Remove all previous fake members (keep only real users)
+  groupData.members = groupData.members.filter(m => realUserNames.includes(m.name));
+  // Add fake members if needed
+  const usedNames = new Set(groupData.members.map(m => m.name));
+  let added = 0;
+  for (let i = 0; added < FAKE_MEMBER_COUNT; i++) {
+    let fname = firstNames[i % firstNames.length];
+    let lname = lastNames[Math.floor(i / firstNames.length) % lastNames.length];
+    let fullName = `${fname} ${lname}`;
+    if (usedNames.has(fullName)) continue;
+    usedNames.add(fullName);
+    groupData.members.push({
+      name: fullName,
+      email: `${fname.toLowerCase()}.${lname.toLowerCase()}${i}@school.edu`,
+      avatar: `https://randomuser.me/api/portraits/${i % 2 === 0 ? 'men' : 'women'}/${(i * 3) % 99}.jpg`
+    });
+    added++;
+  }
+}
+
+function joinGroup(idx) {
+  if (!groups[idx].joined) {
+    groups[idx].joined = true;
+    const group = groups[idx];
+    const groupData = getGroupData(group.name);
+    let profile = {};
+    try { profile = JSON.parse(localStorage.getItem('currentProfile') || '{}'); } catch (e) {}
+    let alreadyMember = false;
+    let realUserName = profile && profile.name ? profile.name : currentUser;
+    // Add real user if not present
+    if (!groupData.members.find(m => m.name === realUserName)) {
+      groupData.members.push({
+        id: profile.id || undefined,
+        name: realUserName,
+        email: profile.email || "venglim@school.edu",
+        avatar: profile.avatar || "https://randomuser.me/api/portraits/men/49.jpg"
+      });
+    }
+    // Always ensure fake members
+    ensureFakeMembers(groupData, [realUserName]);
+    setGroupData(group.name, groupData);
+    groups[idx].members = groupData.members.length;
+    saveGroups(groups);
+    renderGroups();
+    openGroupChat(idx);
+  }
+}
+
+function leaveGroup(idx) {
+  if (groups[idx].joined) {
+    if (groups[idx].owner) {
+      if (!confirm("You are the owner. Leaving will remove you from the group, but the group will remain for other members. Continue?")) {
+        return;
+      }
+      groups[idx].owner = false;
+    }
+    groups[idx].joined = false;
+    const group = groups[idx];
+    const groupData = getGroupData(group.name);
+    let profile = {};
+    try { profile = JSON.parse(localStorage.getItem('currentProfile') || '{}'); } catch (e) {}
+    let realUserName = profile && profile.name ? profile.name : currentUser;
+    // Remove real user
+    groupData.members = groupData.members.filter(m => m.name !== realUserName);
+    // Always ensure fake members (so group never drops below 29 fake members)
+    ensureFakeMembers(groupData, []);
+    setGroupData(group.name, groupData);
+    groups[idx].members = groupData.members.length;
+    saveGroups(groups);
+    renderGroups();
+    document.getElementById('groupChatContainer').style.display = 'none';
+    document.getElementById('inviteSection').style.display = 'none';
+  }
+}
+    function deleteGroup(idx) {
+      const group = groups[idx];
+      // Remove group from groups array
+      groups.splice(idx, 1);
+      saveGroups(groups);
+      // Remove group data from localStorage
+      const data = JSON.parse(localStorage.getItem('groupData') || '{}');
+      delete data[group.name];
+      localStorage.setItem('groupData', JSON.stringify(data));
+      renderGroups();
+      document.getElementById('groupChatContainer').style.display = 'none';
+      document.getElementById('inviteSection').style.display = 'none';
+    }
+    window.joinGroup = joinGroup;
+    window.leaveGroup = leaveGroup;
+
+    // Modal logic
+    const modalBg = document.getElementById('modalBg');
+    const createGroupBtn = document.getElementById('createGroupBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelModalBtn = document.getElementById('cancelModalBtn');
+    const createGroupForm = document.getElementById('createGroupForm');
+    createGroupBtn.onclick = () => { modalBg.style.display = 'flex'; };
+    closeModalBtn.onclick = cancelModalBtn.onclick = () => {
+      modalBg.style.display = 'none';
+      createGroupForm.reset();
+    };
+    createGroupForm.onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('newGroupName').value.trim();
+      const category = document.getElementById('newGroupCategory').value;
+      const desc = document.getElementById('newGroupDesc').value.trim();
+      if (!name || !category || !desc) return;
+      groups.unshift({
+        name,
+        category,
+        desc,
+        members: 1,
+        joined: true,
+        owner: true
+      });
+      // Add creator to groupData
+      const groupData = getGroupData(name);
+      groupData.members = [{ name: currentUser, email: "venglim@school.edu", avatar: "https://randomuser.me/api/portraits/men/49.jpg" }];
+      setGroupData(name, groupData);
+      saveGroups(groups);
+      renderGroups();
+      modalBg.style.display = 'none';
+      createGroupForm.reset();
+    };
+
+    // --- Chat & Invite Feature ---
+    // Store group chat and members in localStorage
+    function getGroupData(groupName) {
+      const data = JSON.parse(localStorage.getItem('groupData') || '{}');
+      // Always return a copy to avoid reference bugs
+      return data[groupName]
+        ? JSON.parse(JSON.stringify(data[groupName]))
+        : { members: [], chat: [], invites: [] };
+    }
+    function setGroupData(groupName, groupData) {
+      const data = JSON.parse(localStorage.getItem('groupData') || '{}');
+      data[groupName] = groupData;
+      localStorage.setItem('groupData', JSON.stringify(data));
+    }
+
+    // Show chat and invite UI for a group
+    function openGroupChat(idx) {
+      const group = groups[idx];
+      const groupData = getGroupData(group.name);
+      document.getElementById('chatGroupName').textContent = group.name + " Chat";
+      document.getElementById('groupChatContainer').style.display = '';
+      document.getElementById('inviteSection').style.display = '';
+      document.getElementById('groupMembersList').style.display = 'none';
+      document.getElementById('toggleMembersBtn').innerHTML = '<i class="fa-solid fa-users"></i> View Members';
+      renderChat(group.name);
+      renderInvites(group.name);
+      window.currentGroupIdx = idx;
+
+      // Attach toggle handler every time you open a chat
+      document.getElementById('toggleMembersBtn').onclick = function() {
+        const membersDiv = document.getElementById('groupMembersList');
+        if (membersDiv.style.display === 'none' || membersDiv.style.display === '') {
+          renderGroupMembers(groups[window.currentGroupIdx].name);
+          membersDiv.style.display = '';
+          this.innerHTML = '<i class="fa-solid fa-users"></i> Hide Members';
+        } else {
+          membersDiv.style.display = 'none';
+          this.innerHTML = '<i class="fa-solid fa-users"></i> View Members';
+        }
+      };
+    }
+
+    // Render chat messages
+    function renderChat(groupName) {
+      const chatBox = document.getElementById('chatMessages');
+      const groupData = getGroupData(groupName);
+      chatBox.innerHTML = '';
+      if (groupData.members.length === 0) {
+        chatBox.innerHTML = `<div style="color:#aaa;text-align:center;margin-top:2em;">No one has joined yet. You can send invites to your friends to join the group.</div>`;
+        document.getElementById('chatInput').disabled = true;
+        document.getElementById('chatSendBtn').disabled = true;
+        return;
+      }
+      // Only group creator can post if alone
+      const isCreator = groupData.members[0] && groupData.members[0].name === currentUser;
+      if (groupData.members.length === 1 && isCreator) {
+        document.getElementById('chatInput').disabled = false;
+        document.getElementById('chatSendBtn').disabled = false;
+        chatBox.innerHTML += `<div style="color:#aaa;text-align:center;margin-bottom:1em;">Invite friends to start a discussion. Only you can post until others join.</div>`;
+      } else {
+        document.getElementById('chatInput').disabled = false;
+        document.getElementById('chatSendBtn').disabled = false;
+      }
+      groupData.chat.forEach(msg => {
+        chatBox.innerHTML += `
+          <div class="chat-message">
+            <div class="chat-avatar"><img src="${msg.avatar}" alt="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
+            <div>
+              <div class="chat-meta">${msg.name}</div>
+              <div class="chat-content">${msg.text}</div>
+            </div>
+          </div>
+        `;
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Render the group members list (only when toggled)
+    function renderGroupMembers(groupName) {
+      const groupData = getGroupData(groupName);
+      const membersDiv = document.getElementById('groupMembersList');
+      if (!groupData.members.length) {
+        membersDiv.style.display = 'none';
+        return;
+      }
+      membersDiv.style.display = '';
+      membersDiv.innerHTML = groupData.members.map(m =>
+        `<span class="group-member${m.name === currentUser ? ' owner' : ''}">
+          <img src="${m.avatar}" alt="${m.name}"> ${m.name}${m.name === currentUser ? ' (You)' : ''}
+        </span>`
+      ).join('');
+    }
+
+    // Update chat send logic to enforce "only creator can post if alone"
+    document.getElementById('chatForm').onsubmit = function(e) {
+      e.preventDefault();
+      const idx = window.currentGroupIdx;
+      const group = groups[idx];
+      const groupData = getGroupData(group.name);
+      if (groupData.members.length === 0) return;
+      // Only creator can post if alone
+      if (groupData.members.length === 1 && groupData.members[0].name !== currentUser) {
+        alert("Only the group creator can post until others join.");
+        return;
+      }
+      const text = document.getElementById('chatInput').value.trim();
+      if (!text) return;
+      groupData.chat.push({
+        name: currentUser,
+        avatar: "https://randomuser.me/api/portraits/men/49.jpg",
+        text
+      });
+      setGroupData(group.name, groupData);
+      renderChat(group.name);
+      document.getElementById('chatInput').value = '';
+
+      // --- Improved: Contextual fake student and professor responses ---
+      function getRelevantResponse(question, responses) {
+        const q = question.toLowerCase();
+        if (q.includes("derivative") || q.includes("differentiate"))
+          return "To find the derivative, apply the power rule or chain rule as needed.";
+        if (q.includes("integral") || q.includes("integration"))
+          return "For integration, try substitution or integration by parts if it's complex.";
+        if (q.includes("algorithm") || q.includes("sort"))
+          return "For sorting algorithms, quicksort is efficient on average, but mergesort is stable.";
+        if (q.includes("physics") || q.includes("quantum"))
+          return "Quantum mechanics can be tricky—focus on understanding the Schrödinger equation basics.";
+        if (q.includes("chemistry") || q.includes("reaction"))
+          return "In organic chemistry, reaction mechanisms often involve electron movement (arrows).";
+        if (q.includes("limit"))
+          return "To solve a limit, try direct substitution first, then factor or use L'Hôpital's Rule if needed.";
+        if (q.includes("matrix") || q.includes("determinant"))
+          return "To find a determinant, use cofactor expansion or row reduction for larger matrices.";
+        // fallback to a random response
+        return responses[Math.floor(Math.random() * responses.length)];
+      }
+
+      // Only reply if more than one member (simulate real group)
+      if (groupData.members.length > 1) {
+        const groupFakeMembers = groupData.members.filter(m =>
+          fakeStudents.some(f => f.name === m.name)
+        );
+        let responders = groupFakeMembers.length > 0
+          ? fakeStudents.filter(f => groupFakeMembers.some(m => m.name === f.name))
+          : fakeStudents;
+
+        responders = responders.sort(() => Math.random() - 0.5).slice(0, 2);
+
+        responders.forEach((student, i) => {
+          setTimeout(() => {
+            const reply = getRelevantResponse(text, student.responses);
+            const msg = {
+              name: student.name,
+              avatar: student.avatar,
+              text: reply
+            };
+            const updatedData = getGroupData(group.name);
+            if (updatedData.members.length > 0) {
+              updatedData.chat.push(msg);
+              setGroupData(group.name, updatedData);
+              renderChat(group.name);
+            }
+          }, 2500 + i * 1200 + Math.random() * 800);
+        });
+
+        // Professor may answer (randomly, 40% chance)
+        if (Math.random() < 0.4) {
+          setTimeout(() => {
+            const reply = getRelevantResponse(text, professor.responses);
+            const msg = {
+              name: professor.name,
+              avatar: professor.avatar,
+              text: reply
+            };
+            const updatedData = getGroupData(group.name);
+            if (updatedData.members.length > 0) {
+              updatedData.chat.push(msg);
+              setGroupData(group.name, updatedData);
+              renderChat(group.name);
+            }
+          }, 5000 + Math.random() * 1000);
+        }
+
+        // Always fallback to AI if no fake students or professor reply
+        setTimeout(() => {
+          const updatedData = getGroupData(group.name);
+          const lastMsg = updatedData.chat[updatedData.chat.length - 1];
+          if (lastMsg && lastMsg.name !== aiStudent.name &&
+              !fakeStudents.some(f => f.name === lastMsg.name) &&
+              lastMsg.name !== professor.name) {
+            const aiReplies = [
+              getRelevantResponse(text, [
+                "That's a great question! I think the answer is...",
+                "Let me check my notes and get back to you.",
+                "Here's a resource that helped me: https://khanacademy.org"
+              ])
+            ];
+            const reply = aiReplies[Math.floor(Math.random() * aiReplies.length)];
+            updatedData.chat.push({
+              name: aiStudent.name,
+              avatar: aiStudent.avatar,
+              text: reply
+            });
+            setGroupData(group.name, updatedData);
+            renderChat(group.name);
+          }
+        }, 7000 + Math.random() * 1000);
+      }
+    };
+
+    // Invite logic
+    document.getElementById('inviteForm').onsubmit = function(e) {
+      e.preventDefault();
+      const idx = window.currentGroupIdx;
+      const group = groups[idx];
+      const groupData = getGroupData(group.name);
+      const input = document.getElementById('inviteInput').value.trim();
+      if (!input) return;
+      // Find student by name or email
+      const student = allStudents.find(s => s.name.toLowerCase() === input.toLowerCase() || s.email.toLowerCase() === input.toLowerCase());
+      if (!student) {
+        alert("Student not found.");
+        return;
+      }
+      if (groupData.members.find(m => m.email === student.email)) {
+        alert("Student already in group.");
+        return;
+      }
+      if (groupData.invites.find(i => i.email === student.email)) {
+        alert("Invite already sent.");
+        return;
+      }
+      groupData.invites.push(student);
+      setGroupData(group.name, groupData);
+      renderInvites(group.name);
+      document.getElementById('inviteInput').value = '';
+      // Simulate invite acceptance after 2s
+      setTimeout(() => {
+        const updatedData = getGroupData(group.name);
+        updatedData.invites = updatedData.invites.filter(i => i.email !== student.email);
+        updatedData.members.push(student);
+        setGroupData(group.name, updatedData);
+        renderInvites(group.name);
+        renderChat(group.name);
+      }, 2000);
+    };
+
+    function renderInvites(groupName) {
+      const groupData = getGroupData(groupName);
+      const inviteList = document.getElementById('inviteList');
+      if (!groupData.invites.length) {
+        inviteList.innerHTML = '';
+        return;
+      }
+      inviteList.innerHTML = "Pending invites: ";
+      groupData.invites.forEach(i => {
+        inviteList.innerHTML += `<span>${i.name}</span>`;
+      });
+    }
+
+    // Add a toggle to switch between all groups and joined groups
+    function showJoinedGroups() {
+      groups = loadGroups();
+      const joined = groups.filter(g => g.joined);
+      const list = document.getElementById('groupsList');
+      if (joined.length === 0) {
+        list.innerHTML = '<div style="color:#aaa;font-size:1.1em;">You have not joined any groups yet.</div>';
+        return;
+      }
+      list.innerHTML = '';
+      joined.forEach((g) => {
+        const realIdx = groups.findIndex(gr => gr.name === g.name);
+        const groupData = getGroupData(g.name);
+        const memberCount = groupData.members.length || 1;
+        let memberAvatars = '';
+        if (groupData.members && groupData.members.length > 0) {
+          memberAvatars = groupData.members.slice(0, 3).map(m =>
+            `<img src="${m.avatar}" alt="${m.name}" title="${m.name}" style="width:22px;height:22px;border-radius:50%;margin-right:-7px;border:2px solid #fff;box-shadow:0 1px 2px #e0e7ff44;">`
+          ).join('');
+          if (groupData.members.length > 3) {
+            memberAvatars += `<span style="margin-left:4px;font-size:0.95em;color:#7b809a;">+${groupData.members.length - 3}</span>`;
+          }
+        }
+        const isMember = groupData.members.some(m => m.name === currentUser);
+        list.innerHTML += `
+          <div class="group-card" data-idx="${realIdx}" style="cursor:pointer;">
+            <div class="group-card-title">${g.name}</div>
+            <div class="group-card-category">${g.category}</div>
+            <div class="group-card-desc">${g.desc}</div>
+            <div class="group-card-footer">
+              <div class="group-card-members">
+                <span style="display:inline-flex;align-items:center;vertical-align:middle;">
+                  ${memberAvatars}
+                  <i class="fa-solid fa-users" style="margin-left:7px;"></i> ${memberCount} member${memberCount > 1 ? 's' : ''}
+                </span>
+              </div>
+              ${g.joined
+                ? `<button class="leave-btn" data-leave="${realIdx}">Leave</button>`
+                : `<button class="join-btn" data-join="${realIdx}">Join</button>`
+              }
+              <span class="group-number-badge">${realIdx + 1}</span>
+            </div>
+            ${g.owner ? `<div class="owner-badge">Owner</div>` : (isMember ? `<div class="joined-badge">Joined</div>` : "")}
+          </div>
+        `;
+      });
+      // Attach event listeners after rendering
+      document.querySelectorAll('.group-card').forEach(card => {
+        const idx = Number(card.getAttribute('data-idx'));
+        card.onclick = function(e) {
+          if (e.target.closest('button')) return;
+          openGroupChat(idx);
+        };
+      });
+      document.querySelectorAll('[data-leave]').forEach(btn => {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          leaveGroup(Number(btn.getAttribute('data-leave')));
+        };
+      });
+      document.querySelectorAll('[data-join]').forEach(btn => {
+        btn.onclick = function(e) {
+          e.stopPropagation();
+          joinGroup(Number(btn.getAttribute('data-join')));
+        };
+      });
+    }
+
+    // Add filter button if not already present
+    if (!document.getElementById('filterGroupsBtn')) {
+      const groupsHeader = document.querySelector('.groups-header');
+      const filterBtn = document.createElement('button');
+      filterBtn.textContent = "Show Joined Groups";
+      filterBtn.style.marginLeft = "1em";
+      filterBtn.className = "create-group-btn";
+      filterBtn.id = "filterGroupsBtn";
+      let showingJoined = false;
+      filterBtn.onclick = function() {
+        showingJoined = !showingJoined;
+        filterBtn.textContent = showingJoined ? "Show All Groups" : "Show Joined Groups";
+        if (showingJoined) showJoinedGroups();
+        else renderGroups();
+      };
+      groupsHeader.appendChild(filterBtn);
+    }
+
+    // Demo users (for inviting)
+    const allStudents = [
+      { name: "Alice", email: "alice@school.edu", avatar: "https://randomuser.me/api/portraits/women/44.jpg" },
+      { name: "Bob", email: "bob@school.edu", avatar: "https://randomuser.me/api/portraits/men/45.jpg" },
+      { name: "Carol", email: "carol@school.edu", avatar: "https://randomuser.me/api/portraits/women/46.jpg" },
+      { name: "Prof. Newton", email: "newton@school.edu", avatar: "https://randomuser.me/api/portraits/men/47.jpg", professor: true }
+    ];
+    // Demo AI/fake students with more realistic responses
+    const fakeStudents = [
+      // Math Group
+      {
+        name: "Alice",
+        subject: "Mathematics",
+        avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+        responses: [
+          "Oh, I remember that from class — it’s because the chain rule lets you take the derivative of a function inside another function.",
+          "Yeah, basically it means you multiply the derivative of the outside by the derivative of the inside.",
+          "To solve a quadratic equation, you can use the quadratic formula: x = [-b ± √(b²-4ac)] / 2a.",
+          "If you get stuck on limits, try direct substitution first, then factor or use L'Hôpital's Rule."
+        ]
+      },
+      // Science Group
+      {
+        name: "Bob",
+        subject: "Science",
+        avatar: "https://randomuser.me/api/portraits/men/45.jpg",
+        responses: [
+          "Photosynthesis is how plants turn light into energy using chlorophyll. It happens mostly in the leaves.",
+          "Yeah, basically Newton’s third law is just ‘every action has an equal and opposite reaction.’",
+          "I think the mitochondria is called the powerhouse of the cell because it makes most of the cell’s energy.",
+          "Diffusion is just stuff moving from where there’s a lot to where there’s less — like perfume spreading in a room."
+        ]
+      },
+      // Literature Group
+      {
+        name: "Carol",
+        subject: "Literature",
+        avatar: "https://randomuser.me/api/portraits/women/46.jpg",
+        responses: [
+          "It’s a symbol of Gatsby’s dream — especially his hope for a future with Daisy. But it also shows how that dream is always out of reach.",
+          "In *Of Mice and Men*, the dream of owning land symbolizes hope and control over one’s life — especially during the Depression.",
+          "The author uses a lot of symbolism in this chapter, especially with the weather.",
+          "I think the green light in Gatsby is all about hope and wanting something you can’t quite reach."
+        ]
+      },
+      // History Group
+      {
+        name: "David",
+        subject: "History",
+        avatar: "https://randomuser.me/api/portraits/men/50.jpg",
+        responses: [
+          "The Cold War wasn’t a real war, more like political tension after WWII between the US and the Soviet Union.",
+          "World War II started in 1939 when Germany invaded Poland.",
+          "The Treaty of Versailles basically blamed Germany for WWI and made them pay a lot of reparations.",
+          "The Renaissance was all about new ideas in art and science — it started in Italy around the 1300s."
+        ]
+      },
+      // Geography Group
+      {
+        name: "Emma",
+        subject: "Geography",
+        avatar: "https://randomuser.me/api/portraits/women/51.jpg",
+        responses: [
+          "The Amazon River flows through Brazil and is the second-longest river in the world after the Nile.",
+          "Mount Everest is the highest mountain in the world, and it’s in the Himalayas between Nepal and China.",
+          "Africa has the most countries of any continent — over 50!",
+          "The Sahara is the largest hot desert, and it covers much of North Africa."
+        ]
+      },
+      // Economics Group
+      {
+        name: "Frank",
+        subject: "Economics",
+        avatar: "https://randomuser.me/api/portraits/men/52.jpg",
+        responses: [
+          "Opportunity cost is what you give up when choosing one option over another — like skipping a shift to study.",
+          "Supply and demand just means prices go up when things are scarce and down when there’s a lot available.",
+          "Inflation means prices go up over time, so your money buys less than before.",
+          "A market equilibrium is where supply equals demand, so there’s no shortage or surplus."
+        ]
+      },
+      // Code/Programming Group
+      {
+        name: "Liam",
+        subject: "Code",
+        avatar: "https://randomuser.me/api/portraits/men/53.jpg",
+        responses: [
+          "If you get an 'undefined variable' error, make sure you declared it before using it.",
+          "You can use a for loop to iterate through an array in JavaScript: for(let i=0;i<arr.length;i++){...}",
+          "Remember to check your indentation if you're getting a syntax error in Python.",
+          "To fix a 'null pointer exception', make sure your object is initialized before you use it."
+        ]
+      }
+    ];
+    // Professor responses
+    const professor = {
+      name: "Prof. Newton",
+      avatar: "https://randomuser.me/api/portraits/men/47.jpg",
+      responses: [
+        "Great question! Remember to always check your units.",
+        "If you have trouble, please review the lecture slides from last week.",
+        "Feel free to ask for a 1-on-1 session if you need more help."
+      ]
+    };
+
+    // AI/fake student fallback
+    const aiStudent = { name: "Sam (AI)", avatar: "https://randomuser.me/api/portraits/men/48.jpg" };
+
+    // Make sure joinGroup and leaveGroup are global
+    window.joinGroup = joinGroup;
+    window.leaveGroup = leaveGroup;
+    window.openGroupChat = openGroupChat;
+
+    renderGroups(); // This will now work and show the groups!
+
+    function getStudentReply(subject, userMessage, groupMembers) {
+      const msg = userMessage.toLowerCase().trim();
+
+      // --- Math: direct calculation for simple expressions ---
+      if (subject === "Mathematics" || subject === "Math") {
+        const addMatch = msg.match(/^what\s+is\s+(\d+)\s*\+\s*(\d+)\s*\??$/);
+        if (addMatch) {
+          const sum = Number(addMatch[1]) + Number(addMatch[2]);
+          return `That's just ${addMatch[1]} plus ${addMatch[2]}, so it's ${sum}.`;
+        }
+        // Simple subtraction
+        const subMatch = msg.match(/^what\s+is\s+(\d+)\s*-\s*(\d+)\s*\??$/);
+        if (subMatch) {
+          const diff = Number(subMatch[1]) - Number(subMatch[2]);
+          return `That's ${subMatch[1]} minus ${subMatch[2]}, so it's ${diff}.`;
+        }
+        // Simple multiplication
+        const mulMatch = msg.match(/^what\s+is\s+(\d+)\s*\*\s*(\d+)\s*\??$|^what\s+is\s+(\d+)\s*times\s*(\d+)\s*\??$/);
+        if (mulMatch) {
+          const a = Number(mulMatch[1] || mulMatch[3]);
+          const b = Number(mulMatch[2] || mulMatch[4]);
+          return `That's ${a} times ${b}, so it's ${a * b}.`;
+        }
+        // Simple division
+        const divMatch = msg.match(/^what\s+is\s+(\d+)\s*\/\s*(\d+)\s*\??$|^what\s+is\s+(\d+)\s*divided\s+by\s+(\d+)\s*\??$/);
+        if (divMatch) {
+          const a = Number(divMatch[1] || divMatch[3]);
+          const b = Number(divMatch[2] || divMatch[4]);
+          if (b === 0) return "Division by zero isn't defined.";
+          return `That's ${a} divided by ${b}, so it's ${a / b}.`;
+        }
+        // Fallback to previous logic
+        if (msg.includes("quadratic")) return "To solve a quadratic equation, you can use the quadratic formula: x = [-b ± √(b²-4ac)] / 2a.";
+        if (msg.includes("derivative")) return "Oh, I remember that from class — it’s because the chain rule lets you take the derivative of a function inside another function.";
+        if (msg.includes("limit")) return "If you get stuck on limits, try direct substitution first, then factor or use L'Hôpital's Rule.";
+        return "Yeah, basically it means you follow the steps we learned in class. Let me know if you want to go through it together.";
+      }
+
+      // --- Code/Programming Group ---
+      if (subject === "Code" || subject === "Programming" || subject === "Computer Science") {
+        if (msg.includes("undefined variable")) return "If you get an 'undefined variable' error, make sure you declared it before using it.";
+        if (msg.includes("for loop")) return "You can use a for loop to iterate through an array in JavaScript: for(let i=0;i<arr.length;i++){...}";
+        if (msg.includes("syntax error")) return "Remember to check your indentation if you're getting a syntax error in Python.";
+        if (msg.includes("null pointer")) return "To fix a 'null pointer exception', make sure your object is initialized before you use it.";
+        return "Yeah, basically you want to check your code for typos or missing declarations. Let me know if you want to share your code!";
+      }
+
+      // --- Science ---
+      if (subject === "Science") {
+        if (msg.includes("photosynthesis")) return "Photosynthesis is how plants turn light into energy using chlorophyll. It happens mostly in the leaves.";
+        // ... (other science logic as before)
+      }
+
+      // --- Literature ---
+      if (subject === "Literature") {
+        if (msg.includes("green light") && msg.includes("gatsby")) return "It’s a symbol of Gatsby’s dream — especially his hope for a future with Daisy. But it also shows how that dream is always out of reach.";
+        // ... (other literature logic as before)
+      }
+
+      // --- History ---
+      if (subject === "History") {
+        if (msg.includes("cold war")) return "The Cold War wasn’t a real war, more like political tension after WWII between the US and the Soviet Union.";
+        // ... (other history logic as before)
+      }
+
+      // --- Geography ---
+      if (subject === "Geography") {
+        if (msg.includes("amazon river")) return "The Amazon River flows through Brazil and is the second-longest river in the world after the Nile.";
+        // ... (other geography logic as before)
+      }
+
+      // --- Economics ---
+      if (subject === "Economics") {
+        if (msg.includes("opportunity cost")) return "Opportunity cost is what you give up when choosing one option over another — like skipping a shift to study.";
+        // ... (other economics logic as before)
+      }
+
+      // --- Only pick a fake student who is in the group and matches the subject ---
+      const groupFakeStudents = groupMembers
+        .map(m => fakeStudents.find(f => f.name === m.name && f.subject && f.subject.toLowerCase() === subject.toLowerCase()))
+        .filter(Boolean);
+
+      if (groupFakeStudents.length > 0) {
+        const student = groupFakeStudents[Math.floor(Math.random() * groupFakeStudents.length)];
+        return student.responses[Math.floor(Math.random() * student.responses.length)];
+      }
+
+      // --- AI fallback ---
+      return "That’s a good question! I think it’s related to what we studied, but I’d have to check my notes to be sure.";
+    }
+  </script>
+  <script>
+    // Set study-themed backgrounds for each tab/page
+    // ...existing code...
+    // document.body.style.backgroundImage = `url('${backgrounds[page]}')`;
+    document.body.style.backgroundImage = "none";
+  </script>
+</body>
+</html>

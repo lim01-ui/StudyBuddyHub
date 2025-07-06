@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Study Buddy Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: #f7f9fd;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      color: #222;
+      /* background-image: url('...'); */ /* <-- Remove or comment out this line */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      transition: background-image 0.5s;
+    }
+    .topnav {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 12px #e0e7ff33;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7em 2em;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-size: 1.7em;
+      font-weight: 700;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+      letter-spacing: 1px;
+    }
+    .logo i {
+      font-size: 1.1em;
+    }
+    .user-area {
+      display: flex;
+      align-items: center;
+      gap: 1em;
+    }
+    .user-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .profile-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2em;
+      letter-spacing: 1px;
+      overflow: hidden;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+    .logout-btn {
+      background: #fff;
+      color: #7b2ff2;
+      border: 1.5px solid #7b2ff2;
+      border-radius: 7px;
+      padding: 0.4em 1.2em;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .logout-btn:hover {
+      background: #7b2ff2;
+      color: #fff;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 24px 0 28px 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    .main-tab {
+      background: #f0f4ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 32px;
+      font-size: 1.13em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      min-width: 150px;
+      justify-content: center;
+    }
+    .main-tab.active,
+    .main-tab[aria-current="page"] {
+      background: #fff;
+      color: #222;
+      border-bottom: 2.5px solid #7b2ff2;
+      box-shadow: 0 4px 16px #e0e7ff44;
+      z-index: 1;
+    }
+    .main-tab:hover:not(.active):not([aria-current="page"]) {
+      background: #e0e7ff;
+      color: #6a5af9;
+    }
+    @media (max-width: 900px) {
+      .main-tabs { gap: 1.2em; max-width: 98vw; }
+      .main-tab { font-size: 1.1em; padding: 0.4em 1em; min-width: 100px; }
+    }
+    @media (max-width: 600px) {
+      .topnav { flex-direction: column; align-items: flex-start; gap: 0.7em; padding: 0.7em 1em; }
+      .main-tabs { gap: 4px; padding: 0.3em 0.2em; margin: 1em auto 1em auto; }
+      .main-tab { font-size: 1em; padding: 8px 12px; min-width: 80px; }
+    }
+    .dashboard-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2em 1em 1em 1em;
+    }
+    .dashboard-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2em;
+      justify-content: flex-start;
+      align-items: stretch;
+      margin-bottom: 2em;
+    }
+    .dashboard-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #e0e7ff33;
+      padding: 1.5em 2em;
+      min-width: 220px;
+      max-width: 320px;
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+      transition: box-shadow 0.2s, transform 0.2s;
+      cursor: pointer;
+      border: 1px solid #e0e7ff;
+    }
+    .dashboard-card:hover {
+      box-shadow: 0 8px 32px #7b2ff233;
+      transform: translateY(-4px) scale(1.03);
+    }
+    .dashboard-card .card-title {
+      font-size: 1.08em;
+      font-weight: 600;
+      color: #222;
+      margin-bottom: 0.2em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .dashboard-card .card-value {
+      font-size: 2em;
+      font-weight: 700;
+      color: #7b2ff2;
+      margin-bottom: 0.1em;
+    }
+    .dashboard-card .card-desc {
+      font-size: 1em;
+      color: #7b809a;
+      margin-bottom: 0.2em;
+    }
+    .dashboard-card .card-icon {
+      font-size: 1.3em;
+      color: #7b2ff2;
+      margin-left: auto;
+      opacity: 0.7;
+    }
+    .dashboard-card .card-value.complete {
+      color: #1db954;
+      font-size: 1.5em;
+    }
+    .welcome-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px #e0e7ff33;
+      padding: 2em 2.5em;
+      margin-bottom: 2em;
+      border: 1px solid #e0e7ff;
+    }
+    .welcome-card h2 {
+      margin: 0 0 0.2em 0;
+      font-size: 2em;
+      font-weight: 700;
+      color: #222;
+    }
+    .welcome-card .subtitle {
+      color: #7b809a;
+      font-size: 1.1em;
+      margin-bottom: 1em;
+    }
+    .welcome-card .desc {
+      font-size: 1.1em;
+      margin-bottom: 1.2em;
+      color: #222;
+    }
+    .welcome-card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.7em;
+    }
+    .welcome-card .tag {
+      background: #e0e7ff;
+      color: #7b2ff2;
+      border-radius: 6px;
+      padding: 0.3em 1em;
+      font-size: 1em;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.2em;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav">
+    <div class="logo"><i class="fa-solid fa-book"></i> Study Buddy Hub</div>
+  </nav>
+  <div class="main-tabs">
+    <a href="dashboard.html" class="main-tab active" aria-current="page"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="Planner.html" class="main-tab"><i class="fa-solid fa-calendar-check"></i> Study Planner</a>
+    <a href="groups.html" class="main-tab"><i class="fa-solid fa-users"></i> Study Groups</a>
+    <a href="notes.html" class="main-tab"><i class="fa-solid fa-book"></i> Notes</a>
+    <a href="discussions.html" class="main-tab"><i class="fa-solid fa-comments"></i> Discussions</a>
+    <a href="profile.html" class="main-tab"><i class="fa-solid fa-user"></i> Profile</a>
+  </div>
+  <main class="dashboard-main">
+    <div class="dashboard-cards">
+      <div class="dashboard-card">
+        <div class="card-title">
+          Study Groups
+          <span class="card-icon">
+            <i class="fa-solid fa-users"></i>
+          </span>
+        </div>
+        <div class="card-value" id="groups-count">0</div>
+        <div class="card-desc">Active memberships</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Shared Notes <span class="card-icon"><i class="fa-regular fa-file-lines"></i></span></div>
+        <div class="card-value" id="notes-count">0</div>
+        <div class="card-desc">Documents uploaded</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Profile Status <span class="card-icon"><i class="fa-regular fa-user"></i></span></div>
+        <div class="card-value complete" id="profile-status">Complete</div>
+        <div class="card-desc">Profile updated</div>
+      </div>
+      <div class="dashboard-card">
+        <div class="card-title">Tasks <span class="card-icon"><i class="fa-regular fa-square-check"></i></span></div>
+        <div class="card-value" id="tasks-count">0</div>
+        <div class="card-desc">Pending tasks</div>
+      </div>
+    </div>
+    <div class="welcome-card">
+      <h2>Welcome to Study Buddy Hub!</h2>
+      <div class="subtitle">Your academic collaboration platform</div>
+      <div class="desc">
+        Connect with fellow students, join study groups, share notes, and participate in academic discussions. Start by exploring the different sections using the tabs above.
+      </div>
+      <div class="tags">
+        <span class="tag">Mathematics</span>
+        <span class="tag">Computer Science</span>
+        <span class="tag">Physics</span>
+        <span class="tag">Chemistry</span>
+        <span class="tag">Biology</span>
+      </div>
+    </div>
+  </main>
+  <script>
+    // Set study-themed backgrounds for each tab/page
+    const backgrounds = {
+      'dashboard.html': 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80', // books, study desk
+      'planner.html': 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=1200&q=80', // calendar, planning
+      'groups.html': 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80', // group study
+      'notes.html': 'https://images.unsplash.com/photo-1510936111840-6cef99faf2a9?auto=format&fit=crop&w=1200&q=80', // notes, writing
+      'discussions.html': 'https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80', // discussion, talking
+      'profile.html': 'https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=1200&q=80', // profile, student
+    };
+    // Get current page filename
+    const page = location.pathname.split('/').pop();
+    // Set background if match found
+    if (backgrounds[page]) {
+      document.body.style.backgroundImage = "none";
+    } else {
+      document.body.style.backgroundImage = "none";
+    }
+  </script>
+  <script>
+    // Dashboard tab functionalities: update dashboard cards with real data from localStorage
+    function updateDashboardCards() {
+      // Get current user profile (owner)
+      const profile = JSON.parse(localStorage.getItem('currentProfile') || '{}');
+      // Accept both id and name as fallback for ownerId
+      let ownerId = null;
+      if (profile && profile.id) {
+        ownerId = profile.id;
+      } else if (profile && profile.name) {
+        ownerId = profile.name;
+      }
+
+
+
+      // Study Groups count: count groups where user is a member (support all group storage keys)
+      let groupsCount = 0;
+      let groups = [];
+      // Try all possible group storage keys
+      let groupKeys = ['groups', 'studyGroups'];
+      for (let key of groupKeys) {
+        let arr = [];
+        try {
+          arr = JSON.parse(localStorage.getItem(key) || '[]');
+        } catch (e) { arr = []; }
+        groups = groups.concat(arr);
+      }
+      // Try to get groupData (robust membership info)
+      let groupDataObj = {};
+      try {
+        groupDataObj = JSON.parse(localStorage.getItem('groupData') || '{}');
+      } catch (e) { groupDataObj = {}; }
+      if (ownerId && Array.isArray(groups) && groups.length > 0) {
+        // Use a Set to avoid double-counting groups with the same name
+        let counted = new Set();
+        groupsCount = groups.reduce((acc, g) => {
+          let groupName = g.name || g.title;
+          if (!groupName || counted.has(groupName)) return acc;
+          let groupData = groupDataObj[groupName];
+          if (groupData && Array.isArray(groupData.members)) {
+            if (groupData.members.some(m => (m.id && String(m.id) === String(ownerId)) || (m.name && String(m.name) === String(ownerId)) || (m.name && String(m.name) === String(profile.name)))) {
+              counted.add(groupName);
+              return acc + 1;
+            }
+          }
+          return acc;
+        }, 0);
+      }
+      document.getElementById('groups-count').textContent = groupsCount;
+
+      // Shared Notes count: count notes uploaded by the user (support all note storage keys)
+      let notesCount = 0;
+      let notes = [];
+      // Try all possible note storage keys
+      let noteKeys = ['notes', 'publicNotes', 'privateNotes'];
+      for (let key of noteKeys) {
+        let arr = [];
+        try {
+          arr = JSON.parse(localStorage.getItem(key) || (key === 'privateNotes' ? '{}' : '[]'));
+        } catch (e) { arr = (key === 'privateNotes' ? {} : []); }
+        if (key === 'privateNotes') {
+          // privateNotes is an object of arrays
+          arr = Object.values(arr).flat();
+        }
+        notes = notes.concat(arr);
+      }
+      if (ownerId && Array.isArray(notes) && notes.length > 0) {
+        notesCount = notes.filter(n => n.ownerId === ownerId || n.userId === ownerId || n.owner === ownerId || n.owner === profile.name || n.uploader === ownerId || n.uploader === profile.name).length;
+      }
+      document.getElementById('notes-count').textContent = notesCount;
+
+      // Profile Status: require name and a Gmail address (ends with @gmail.com)
+      const hasName = profile && profile.name && profile.name.trim() !== '';
+      const hasGmail = profile && profile.email && /@gmail\.com$/i.test(profile.email.trim());
+      if (hasName && hasGmail) {
+        document.getElementById('profile-status').textContent = 'Complete';
+        document.getElementById('profile-status').classList.add('complete');
+      } else {
+        document.getElementById('profile-status').textContent = 'Incomplete';
+        document.getElementById('profile-status').classList.remove('complete');
+      }
+
+      // Tasks count (from planner): show all tasks for this user
+      let plannerTasks = [];
+      try {
+        plannerTasks = JSON.parse(localStorage.getItem('plannerTasks') || '[]');
+      } catch (e) { plannerTasks = []; }
+      let userTasks = 0;
+      if (ownerId && Array.isArray(plannerTasks) && plannerTasks.length > 0) {
+        userTasks = plannerTasks.filter(t => t.type === 'task' && (t.ownerId === ownerId || t.userId === ownerId || t.owner === profile.name)).length;
+      }
+      document.getElementById('tasks-count').textContent = userTasks;
+    }
+
+    // Ensure dashboard is empty except for name on first registration
+    function ensureInitialProfile() {
+      let profile = JSON.parse(localStorage.getItem('currentProfile') || '{}');
+      if (!profile || !profile.name) {
+        // If no profile or name, prompt for name (simple prompt for demo, replace with registration form in production)
+        const name = prompt('Please enter your name to complete registration:');
+        if (name && name.trim() !== '') {
+          profile = { name: name.trim() };
+          localStorage.setItem('currentProfile', JSON.stringify(profile));
+        }
+      }
+    }
+
+    // Auto-fill author name in notes upload (for notes.html, but included here for reference)
+    function autoFillAuthorName() {
+      const profile = JSON.parse(localStorage.getItem('currentProfile') || '{}');
+      if (profile && profile.name) {
+        const authorInput = document.getElementById('author-name');
+        if (authorInput) {
+          authorInput.value = profile.name;
+          authorInput.readOnly = true;
+        }
+      }
+    }
+
+    // Run on page load
+    ensureInitialProfile();
+    updateDashboardCards();
+    // If on notes.html, call autoFillAuthorName();
+    if (location.pathname.endsWith('notes.html')) {
+      window.addEventListener('DOMContentLoaded', autoFillAuthorName);
+    }
+
+    // Listen for changes in localStorage and update dashboard live
+    window.addEventListener('storage', function(e) {
+      if (["groups", "notes", "plannerTasks", "currentProfile"].includes(e.key)) {
+        updateDashboardCards();
+      }
+    });
+
+    // Also update dashboard when user returns to the tab (in case changes were made elsewhere)
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        updateDashboardCards();
+      }
+    });
+  </script>
+</body>
+</html>

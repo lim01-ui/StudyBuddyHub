@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Study Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      background: #f7f9fd;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      color: #151520;
+      background-image: url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80'); /* Modern bookshelf background */
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      transition: background-image 0.5s;
+    }
+    /* body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: -1;
+      background: url('https://images.pexels.com/photos/674010/pexels-photo-674010.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      filter: blur(8px) brightness(0.85);
+      opacity: 0.85;
+      pointer-events: none;
+    } */
+    .topnav {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 12px #e0e7ff33;
+      display: flex;
+      align-items: center;
+      padding: 0.7em 2em;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-size: 1.7em;
+      font-weight: 700;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      gap: 0.6em;
+      letter-spacing: 1px;
+    }
+    .logo i {
+      font-size: 1.1em;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 24px 0 28px 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    .main-tab {
+      background: #f0f4ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 32px;
+      font-size: 1.13em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      min-width: 150px;
+      justify-content: center;
+    }
+    .main-tab.active,
+    .main-tab[aria-current="page"] {
+      background: #fff;
+      color: #222;
+      border-bottom: 2.5px solid #7b2ff2;
+      box-shadow: 0 4px 16px #e0e7ff44;
+      z-index: 1;
+    }
+    .main-tab:hover:not(.active):not([aria-current="page"]) {
+      background: #e0e7ff;
+      color: #6a5af9;
+    }
+    @media (max-width: 900px) {
+      .main-tabs { gap: 1.2em; max-width: 98vw; }
+      .main-tab { font-size: 1.1em; padding: 0.4em 1em; min-width: 100px; }
+    }
+    @media (max-width: 600px) {
+      .topnav { flex-direction: column; align-items: flex-start; gap: 0.7em; padding: 0.7em 1em; }
+      .main-tabs { gap: 4px; padding: 0.3em 0.2em; margin: 1em auto 1em auto; }
+      .main-tab { font-size: 1em; padding: 8px 12px; min-width: 80px; }
+    }
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 16px 0 16px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+      color: #222; /* Changed from #fff to #222 */
+    }
+    .header p {
+      color: #222; /* Changed from #fff to #222 */
+      font-size: 1.15rem;
+      margin: 0 0 24px 0;
+    }
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 18px;
+    }
+    .search-bar input {
+      width: 100%;
+      max-width: 420px;
+      padding: 12px 18px;
+      border: 1.5px solid #e3e7f7;
+      border-radius: 10px;
+      font-size: 1.08rem;
+      background: #fff;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .search-bar input:focus {
+      border: 1.5px solid #6a5af9;
+    }
+    .filters {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      flex-wrap: wrap;
+    }
+    .filters select {
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1.5px solid #e3e7f7;
+      background: #fff;
+      font-size: 1rem;
+      color: #222;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .filters select:focus {
+      border: 1.5px solid #6a5af9;
+    }
+    .notes-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 22px;
+      justify-content: center;
+    }
+    .notes-tab {
+      background: #f0f4ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 32px;
+      font-size: 1.13em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+    .notes-tab.active {
+      background: #fff;
+      color: #222;
+      border-bottom: 2.5px solid #7b2ff2;
+      box-shadow: 0 4px 16px #e0e7ff44;
+      z-index: 1;
+    }
+    .notes-tab:hover:not(.active) {
+      background: #e0e7ff;
+      color: #6a5af9;
+    }
+    @media (max-width: 900px) {
+      .nav-tabs { gap: 1.2em; max-width: 98vw; }
+      .nav-tab { font-size: 1.1em; padding: 0.4em 1em; }
+    }
+    @media (max-width: 600px) {
+      .topnav { flex-direction: column; align-items: flex-start; gap: 0.7em; padding: 0.7em 1em; }
+      .nav-tabs { gap: 4px; padding: 0.3em 0.2em; margin: 1em auto 1em auto; }
+      .nav-tab { font-size: 1em; padding: 8px 12px; }
+      .notes-tab { font-size: 1em; padding: 8px 12px; }
+      .notes-tabs { gap: 4px; }
+    }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+    .note-card {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(80, 112, 255, 0.07);
+      padding: 22px 20px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 210px;
+      border: 1.5px solid #f0f4ff;
+      transition: box-shadow 0.18s, border 0.18s, transform 0.18s;
+      cursor: pointer;
+    }
+    .note-card:hover {
+      box-shadow: 0 6px 28px rgba(106,90,249,0.13);
+      border: 1.5px solid #6a5af9;
+      transform: translateY(-2px) scale(1.012);
+    }
+    .note-title {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #222;
+    }
+    .note-author {
+      font-size: 0.98rem;
+      color: #6b7a99;
+      margin-bottom: 8px;
+    }
+    .note-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .note-tag {
+      background: #f0f4ff;
+      color: #4b5b8a;
+      border-radius: 8px;
+      padding: 3px 12px;
+      font-size: 0.93rem;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+    }
+    .note-desc {
+      font-size: 1.01rem;
+      color: #444;
+      margin-bottom: 18px;
+      min-height: 38px;
+      max-height: 38px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .view-btn {
+      background: #4263eb;
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 8px 22px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      align-self: flex-start;
+      margin-top: auto;
+      transition: background 0.18s;
+      box-shadow: 0 1px 4px rgba(66,99,235,0.08);
+    }
+    .view-btn:hover {
+      background: #6a5af9;
+    }
+    .note-rating {
+      color: #f7b731;
+      font-size: 1.05rem;
+      margin: 8px 0 0 0;
+    }
+    .rate-row {
+      margin-top: 8px;
+      font-size: 0.97rem;
+      color: #6b7a99;
+    }
+    .rate-row button {
+      background: none;
+      border: none;
+      color: #6a5af9;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin: 0 2px;
+      transition: color 0.15s;
+    }
+    .rate-row button:hover {
+      color: #f7b731;
+    }
+    .add-note-btn {
+      background: #6a5af9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0 auto 32px auto;
+      display: block;
+      transition: background 0.18s;
+      box-shadow: 0 2px 8px #6a5af933;
+    }
+    .add-note-btn:hover {
+      background: #705df2;
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.2);
+      justify-content: center;
+      align-items: center;
+      overflow: auto;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 4px 32px #7b2ff233;
+      padding: 32px 28px;
+      max-width: 420px;
+      width: 95vw;
+      margin: 0 auto;
+    }
+    @media (max-width: 500px) {
+      .modal-content { padding: 18px 6vw; }
+    }
+    .private-badge { background: #ffe0e7; color: #d72660; border-radius: 8px; padding: 2px 10px; font-size: 0.93rem; font-weight: 600; margin-left: 8px; }
+    .access-code-info { color: #d72660; font-size: 1rem; margin: 8px 0 0 0; text-align: left; word-break: break-all; }
+    .access-code-on-card {
+      display: block;
+      font-size: 0.93em;
+      color: #d72660;
+      margin-top: 6px;
+      word-break: break-all;
+      background: #fff3f6;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-weight: 600;
+    }
+    .expired-badge { background: #e0e7ff; color: #7b2ff2; border-radius: 8px; padding: 2px 10px; font-size: 0.93rem; font-weight: 600; margin-left: 8px; }
+    .note-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .note-actions button {
+      background: #e0e7ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 0.98em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.18s;
+    }
+    .note-actions button:hover {
+      background: #d6d6f7;
+    }
+    .access-code-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .access-code-bar input[type="text"] {
+      padding: 12px 18px;
+      border: 1.5px solid #e3e7f7;
+      border-radius: 8px;
+      font-size: 1.08rem;
+      background: #fff;
+      outline: none;
+      transition: border 0.2s;
+      width: 240px;
+      max-width: 60vw;
+    }
+
+    .access-code-bar input[type="text"]:focus {
+      border: 1.5px solid #6a5af9;
+    }
+
+    .access-btn {
+      background: linear-gradient(90deg, #7b2ff2 0%, #f357a8 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 26px;
+      font-size: 1.08em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.18s, box-shadow 0.18s, transform 0.13s;
+    }
+    .access-btn:hover {
+      background: linear-gradient(90deg, #6a5af9 0%, #d72660 100%);
+      box-shadow: 0 4px 16px #e0e7ff44;
+      transform: translateY(-2px) scale(1.03);
+    }
+    /* Removed .user-area, .user-nav, .profile-avatar, .logout-btn styles */
+  </style>
+</head>
+<body>
+  <script>
+    // Set the same bookshelf background as in CSS
+    // document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1503676382389-4809596d5290?auto=format&fit=crop&w=1200&q=80')";
+    document.body.style.backgroundImage = "none";
+  </script>
+  <nav class="topnav">
+    <div class="logo"><i class="fa-solid fa-book"></i> Study Buddy Hub</div>
+    <!-- Profile icon and logout button removed -->
+  </nav>
+  <div class="main-tabs">
+    <a href="dashboard.html" class="main-tab"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="Planner.html" class="main-tab"><i class="fa-solid fa-calendar-check"></i> Study Planner</a>
+    <a href="groups.html" class="main-tab"><i class="fa-solid fa-users"></i> Study Groups</a>
+    <a href="notes.html" class="main-tab active" aria-current="page"><i class="fa-solid fa-book"></i> Notes</a>
+    <a href="discussions.html" class="main-tab"><i class="fa-solid fa-comments"></i> Discussions</a>
+    <a href="profile.html" class="main-tab"><i class="fa-solid fa-user"></i> Profile</a>
+  </div>
+  <div class="container">
+    <div class="header">
+      <h1>Study Notes</h1>
+      <p>Browse notes shared by other students on different topics</p>
+    </div>
+    <button class="add-note-btn" onclick="openModal()">&#8682; Upload Notes</button>
+    <div class="access-code-bar">
+      <input type="text" id="accessCodeInput" placeholder="Enter private note passcode">
+      <button class="access-btn" onclick="useAccessCode()">
+        <i class="fa-solid fa-lock"></i> Access Private Notes
+      </button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search notes">
+    </div>
+    <div class="filters">
+      <select id="subjectFilter">
+        <option value="">Subject</option>
+        <option value="Math">Math</option>
+        <option value="Science">Science</option>
+        <option value="English">English</option>
+        <option value="Chemistry">Chemistry</option>
+        <option value="Geo">Geo</option>
+        <option value="Biology">Biology</option>
+        <option value="Physics">Physics</option>
+        <option value="Arts">Arts</option>
+        <option value="Others">Others</option>
+      </select>
+      <select id="dateFilter">
+        <option value="">Date</option>
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+      </select>
+      <select id="popularityFilter">
+        <option value="">Popularity</option>
+        <option value="most">Most Popular</option>
+        <option value="least">Least Popular</option>
+      </select>
+    </div>
+    <div class="notes-tabs">
+      <button id="tab-my-notes" class="notes-tab active" type="button" onclick="switchNotesTab('my')">
+        <i class="fa-solid fa-user"></i> My Notes
+      </button>
+      <button id="tab-all-notes" class="notes-tab" type="button" onclick="switchNotesTab('all')">
+        <i class="fa-solid fa-globe"></i> All Notes
+      </button>
+    </div>
+    <div class="notes-grid" id="notesGrid"></div>
+  </div>
+
+  <!-- Modal for adding notes -->
+  <div class="modal" id="noteModal">
+    <div class="modal-content" style="max-width:420px;">
+      <h2 style="margin-bottom:18px;color:#7b2ff2;text-align:center;">Upload New Note</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div>
+          <label for="noteTitle" style="font-weight:600;">Title</label>
+          <input type="text" id="noteTitle" required style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+        </div>
+        <div>
+          <label for="noteSubject" style="font-weight:600;">Subject</label>
+          <select id="noteSubject" required style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+            <option value="Math">Math</option>
+            <option value="Science">Science</option>
+            <option value="English">English</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Geo">Geo</option>
+            <option value="Biology">Biology</option>
+            <option value="Physics">Physics</option>
+            <option value="Arts">Arts</option>
+            <option value="Others">Others</option>
+          </select>
+        </div>
+        <div>
+          <label for="noteTags" style="font-weight:600;">Tags <span style="color:#888;font-size:0.95em;">(comma separated)</span></label>
+          <input type="text" id="noteTags" placeholder="e.g. algebra, grade 10, equations" style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+        </div>
+        <div>
+          <label for="noteAuthor" style="font-weight:600;">Author</label>
+          <input type="text" id="noteAuthor" required placeholder="e.g. Sarah M." style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+        </div>
+        <div>
+          <label for="publishType" style="font-weight:600;">Publish as</label>
+          <select id="publishType" style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+            <option value="file">File</option>
+            <option value="link">Link</option>
+          </select>
+        </div>
+        <div id="fileInputContainer">
+          <input type="file" id="noteFile" style="margin-top:4px;">
+        </div>
+        <div id="linkInputContainer" style="display:none;">
+          <input type="url" id="noteLink" placeholder="https://example.com" style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+        </div>
+        <div>
+          <label for="noteVisibility" style="font-weight:600;">Visibility</label>
+          <select id="noteVisibility" style="width:100%;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+        <div id="accessCodeDisplay" class="access-code-info" style="display:none;"></div>
+        <div>
+          <label for="noteEditor" style="font-weight:600;">Note Content</label>
+          <div id="noteEditor" contenteditable="true" style="width:100%;min-height:80px;padding:10px;margin-top:4px;border-radius:7px;border:1.5px solid #e3e7f7;background:#fff;"></div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:10px;">
+          <button class="close-btn" onclick="closeModal()" style="padding:10px 22px;border-radius:7px;border:none;background:#e0e7ff;color:#7b2ff2;font-weight:600;cursor:pointer;">Cancel</button>
+          <button class="add-btn" onclick="addNote()" style="padding:10px 22px;border-radius:7px;border:none;background:linear-gradient(90deg,#7b2ff2 0%,#f357a8 100%);color:#fff;font-weight:600;cursor:pointer;">Create Note</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Always get the current user's name from their profile (used for author field)
+    function getCurrentUser() {
+      // Try to get the current profile (as set by dashboard.html)
+      let profile = null;
+      try {
+        profile = JSON.parse(localStorage.getItem('currentProfile') || '{}');
+      } catch (e) {}
+      if (profile && profile.name) return profile.name;
+      // Fallbacks for legacy/localstorage
+      return localStorage.getItem('userName') || "User";
+    }
+
+    function getCurrentUserKey() {
+      let email = localStorage.getItem('currentUserEmail');
+      if (!email) email = localStorage.getItem('userName');
+      return email ? 'profile_' + email.toLowerCase() : null;
+    }
+    function getCurrentProfile() {
+      const key = getCurrentUserKey();
+      if (!key) return null;
+      return JSON.parse(localStorage.getItem(key) || 'null');
+    }
+    function updateNavAvatar(profile) {
+      let navAvatar = document.getElementById('nav-avatar');
+      let navUsername = document.getElementById('nav-username');
+      if (!navAvatar || !navUsername) return;
+      if (!profile) profile = getCurrentProfile() || {};
+      if (profile.avatar) {
+        navAvatar.innerHTML = `<img src="${profile.avatar}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        navAvatar.style.background = "none";
+        navAvatar.style.color = "inherit";
+        navAvatar.style.display = "inline-block";
+        navAvatar.style.alignItems = "unset";
+        navAvatar.style.justifyContent = "unset";
+        navAvatar.style.fontWeight = "unset";
+        navAvatar.style.fontSize = "unset";
+      } else {
+        navAvatar.innerHTML = "";
+        let initials = profile.name ? profile.name.trim()[0].toUpperCase() : 'U';
+        navAvatar.textContent = initials;
+        navAvatar.style.background = "#e0e7ff";
+        navAvatar.style.color = "#7b2ff2";
+        navAvatar.style.display = "flex";
+        navAvatar.style.alignItems = "center";
+        navAvatar.style.justifyContent = "center";
+        navAvatar.style.fontWeight = "700";
+        navAvatar.style.fontSize = "1.1em";
+      }
+      navUsername.innerText = profile.name || '';
+    }
+    window.addEventListener('storage', function() {
+      updateNavAvatar();
+    });
+    window.addEventListener('DOMContentLoaded', function() {
+      updateNavAvatar();
+    });
+
+    let publicNotes = JSON.parse(localStorage.getItem('publicNotes') || '[]');
+    let privateNotes = JSON.parse(localStorage.getItem('privateNotes') || '{}');
+    let ratedNotes = {};
+    let allowedAccessCodes = JSON.parse(localStorage.getItem('allowedAccessCodes') || '[]');
+    let currentAccessCode = null;
+
+    // Clean expired private notes (7 days)
+    function cleanExpiredNotes() {
+      let changed = false;
+      const now = Date.now();
+      Object.keys(privateNotes).forEach(code => {
+        privateNotes[code] = privateNotes[code].filter(note => !note.expireAt || now < note.expireAt);
+        if (privateNotes[code].length === 0) {
+          delete privateNotes[code];
+          changed = true;
+        }
+      });
+      if (changed) {
+        localStorage.setItem('privateNotes', JSON.stringify(privateNotes));
+      }
+    }
+
+    function openModal() {
+      document.getElementById('noteModal').style.display = 'flex';
+      document.getElementById('noteTitle').value = '';
+      document.getElementById('noteSubject').value = 'Math';
+      document.getElementById('noteTags').value = '';
+      // Always set author to current profile name and make it readonly
+      const authorInput = document.getElementById('noteAuthor');
+      authorInput.value = getCurrentUser();
+      authorInput.readOnly = true;
+      document.getElementById('publishType').value = 'file';
+      document.getElementById('fileInputContainer').style.display = "block";
+      document.getElementById('linkInputContainer').style.display = "none";
+      document.getElementById('noteFile').value = '';
+      document.getElementById('noteLink').value = '';
+      document.getElementById('noteVisibility').value = 'public';
+      document.getElementById('accessCodeDisplay').style.display = "none";
+      document.getElementById('accessCodeDisplay').textContent = "";
+      document.getElementById('noteEditor').innerHTML = '';
+    }
+    function closeModal() { document.getElementById('noteModal').style.display = 'none'; }
+    document.getElementById('publishType').addEventListener('change', function() {
+      if (this.value === "file") {
+        document.getElementById('fileInputContainer').style.display = "block";
+        document.getElementById('linkInputContainer').style.display = "none";
+      } else {
+        document.getElementById('fileInputContainer').style.display = "none";
+        document.getElementById('linkInputContainer').style.display = "block";
+      }
+    });
+    document.getElementById('noteVisibility').addEventListener('change', function() {
+      if (this.value === "private") {
+        document.getElementById('accessCodeDisplay').style.display = "block";
+        document.getElementById('accessCodeDisplay').textContent = "Passcode will be generated after upload.";
+      } else {
+        document.getElementById('accessCodeDisplay').style.display = "none";
+        document.getElementById('accessCodeDisplay').textContent = "";
+      }
+    });
+
+    function formatEditor(cmd) { document.execCommand(cmd, false, null); }
+    function generateAccessCode() {
+      return Math.random().toString(36).substr(2, 8).toUpperCase();
+    }
+
+    // Store file as base64 for persistent access
+    function fileToBase64(file, callback) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        callback(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addNote() {
+      const title = document.getElementById('noteTitle').value;
+      const subject = document.getElementById('noteSubject').value;
+      const tags = document.getElementById('noteTags').value.split(',').map(t => t.trim()).filter(Boolean);
+      const author = document.getElementById('noteAuthor').value;
+      const publishType = document.getElementById('publishType').value;
+      const visibility = document.getElementById('noteVisibility').value;
+      const noteContent = document.getElementById('noteEditor').innerHTML;
+      let profile = {};
+      try { profile = JSON.parse(localStorage.getItem('currentProfile') || '{}'); } catch (e) {}
+      let newNote = {
+        title, subject, author, tags: [subject, ...tags], desc: subject,
+        type: publishType, rating: 0, ratingCount: 0, date: new Date().toISOString().slice(0,10),
+        popularity: 0, content: noteContent, uploader: getCurrentUser(),
+        ownerId: profile.id || undefined,
+        userId: profile.id || undefined,
+        owner: profile.name || undefined
+      };
+      if (publishType === "file") {
+        const fileInput = document.getElementById('noteFile');
+        if (fileInput.files.length === 0) { alert("Please select a file to upload."); return; }
+        const file = fileInput.files[0];
+        fileToBase64(file, function(base64) {
+          newNote.fileName = file.name;
+          newNote.fileBase64 = base64;
+          finishAddNote(newNote, visibility, noteContent);
+        });
+        return;
+      } else if (publishType === "link") {
+        const link = document.getElementById('noteLink').value;
+        if (!link) { alert("Please enter a link."); return; }
+        newNote.link = link;
+      }
+      finishAddNote(newNote, visibility, noteContent);
+    }
+
+    function finishAddNote(newNote, visibility, noteContent) {
+      if (newNote.title && newNote.subject && newNote.author) {
+        // --- Record activity for profile ---
+        function addUserActivity(activity) {
+          let email = null;
+          let profile = JSON.parse(localStorage.getItem('currentProfile') || 'null');
+          if (profile && profile.email) email = profile.email;
+          if (!email) email = localStorage.getItem('currentUserEmail');
+          const key = email ? 'profile_' + email.toLowerCase() + '_activity' : 'profile_default_activity';
+          const list = JSON.parse(localStorage.getItem(key) || '[]');
+          list.unshift({ ...activity, time: new Date().toISOString() });
+          localStorage.setItem(key, JSON.stringify(list.slice(0, 30)));
+        }
+        addUserActivity({ icon: "fa-book", text: `Shared a note: '${newNote.title}'` });
+        if (visibility === "public") {
+          publicNotes.unshift(newNote);
+          localStorage.setItem('publicNotes', JSON.stringify(publicNotes));
+          // Trigger dashboard update in same tab
+          window.dispatchEvent(new StorageEvent('storage', {key: 'notes'}));
+          closeModal();
+          renderNotes();
+        } else {
+          const code = generateAccessCode();
+          newNote.accessCode = code;
+          newNote.expireAt = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
+          if (!privateNotes[code]) privateNotes[code] = [];
+          privateNotes[code].unshift(newNote);
+          localStorage.setItem('privateNotes', JSON.stringify(privateNotes));
+          let uploaderCodes = JSON.parse(localStorage.getItem('myPrivateCodes') || '[]');
+          uploaderCodes.push(code);
+          localStorage.setItem('myPrivateCodes', JSON.stringify(uploaderCodes));
+          // Trigger dashboard update in same tab
+          window.dispatchEvent(new StorageEvent('storage', {key: 'notes'}));
+          document.getElementById('accessCodeDisplay').style.display = "block";
+          document.getElementById('accessCodeDisplay').innerHTML = `Private note uploaded!<br>Passcode: <b>${code}</b><br>
+            <span style="font-size:0.95em;">Share this link: <span class="share-link">${window.location.origin + window.location.pathname}?access=${code}</span></span>`;
+          setTimeout(() => {
+            closeModal();
+            renderNotes();
+            alert("Share this passcode or link with others to let them view this private note: " + code);
+          }, 1800);
+        }
+      }
+    }
+
+    function useAccessCode() {
+      const code = document.getElementById('accessCodeInput').value.trim().toUpperCase();
+      if (!code) { alert("Please enter a passcode."); return; }
+      cleanExpiredNotes();
+      if (privateNotes[code]) {
+        let allowed = JSON.parse(localStorage.getItem('allowedAccessCodes') || '[]');
+        if (!allowed.includes(code)) {
+          allowed.push(code);
+          localStorage.setItem('allowedAccessCodes', JSON.stringify(allowed));
+        }
+        renderNotes();
+        alert("Private notes for this passcode are now visible.");
+      } else {
+        alert("Invalid or unknown passcode.");
+      }
+    }
+
+    window.onload = function() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('access');
+      if (code) {
+        setTimeout(() => {
+          document.getElementById('accessCodeInput').value = code;
+          useAccessCode();
+        }, 200);
+      }
+      notesTab = 'my'; // Default to "My Notes"
+      switchNotesTab(notesTab);
+    };
+
+    let notesTab = 'my'; // Default to "My Notes" on load
+
+    function switchNotesTab(tab) {
+      notesTab = tab; // <-- This line is required!
+      const myNotesTab = document.getElementById('tab-my-notes');
+      const allNotesTab = document.getElementById('tab-all-notes');
+      const isMyNotes = tab === 'my';
+      myNotesTab.classList.toggle('active', isMyNotes);
+      allNotesTab.classList.toggle('active', !isMyNotes);
+      renderNotes();
+    }
+
+    function renderNotes() {
+      cleanExpiredNotes();
+      const grid = document.getElementById('notesGrid');
+      const search = document.getElementById('searchInput').value.trim().toLowerCase();
+      const subject = document.getElementById('subjectFilter').value;
+      const date = document.getElementById('dateFilter').value;
+      const popularity = document.getElementById('popularityFilter').value;
+      let allNotes = [...publicNotes];
+      let uploaderCodes = JSON.parse(localStorage.getItem('myPrivateCodes') || '[]');
+      let allowedCodes = JSON.parse(localStorage.getItem('allowedAccessCodes') || '[]');
+      Object.keys(privateNotes).forEach(code => {
+        let show = false;
+        let noteUploader = privateNotes[code][0]?.uploader;
+        if (uploaderCodes.includes(code) && noteUploader === getCurrentUser()) show = true;
+        if (allowedCodes.includes(code) && noteUploader !== getCurrentUser()) show = true;
+        if (show) {
+          privateNotes[code].forEach(n => n._private = true);
+          allNotes = allNotes.concat(privateNotes[code]);
+        }
+      });
+
+      // Filter notes
+      let filtered = allNotes.filter(note => {
+        let match = true;
+        if (search) {
+          match = note.title.toLowerCase().includes(search) ||
+                  note.author.toLowerCase().includes(search) ||
+                  (note.desc && note.desc.toLowerCase().includes(search)) ||
+                  (note.tags && note.tags.some(t => t.toLowerCase().includes(search)));
+        }
+        if (match && subject) {
+          match = note.subject === subject || (note.tags && note.tags.includes(subject));
+        }
+        return match;
+      });
+
+      // Sort
+      if (date === "newest") filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+      else if (date === "oldest") filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+      if (popularity === "most") filtered.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+      else if (popularity === "least") filtered.sort((a, b) => (a.popularity || 0) - (b.popularity || 0));
+
+      // Separate my notes
+      const currentUser = getCurrentUser();
+      let myNotes = filtered.filter(note => note.uploader === currentUser);
+      let otherNotes = filtered.filter(note => note.uploader !== currentUser);
+
+      // Helper to render a note card
+      function renderNoteCard(note) {
+        let ratingStars = '';
+        if (typeof note.rating === "number" && note.ratingCount > 0) {
+          const rounded = Math.round(note.rating);
+          for (let i = 1; i <= 5; i++) ratingStars += i <= rounded ? '★' : '☆';
+          ratingStars += ` <span style="color:#6b7a99;font-size:0.95rem;">(${note.rating.toFixed(1)}/5, ${note.ratingCount} ratings)</span>`;
+        }
+        let rateButtons = '';
+        let noteKey = note.title + note.author + (note.accessCode || "");
+        if (!ratedNotes[noteKey]) {
+          rateButtons = `<div class="rate-row">Rate this note:
+              <span>
+                <button onclick="rateNote('${note.title}','${note.author}','${note.accessCode||""}',1);event.stopPropagation();">1</button>
+                <button onclick="rateNote('${note.title}','${note.author}','${note.accessCode||""}',2);event.stopPropagation();">2</button>
+                <button onclick="rateNote('${note.title}','${note.author}','${note.accessCode||""}',3);event.stopPropagation();">3</button>
+                <button onclick="rateNote('${note.title}','${note.author}','${note.accessCode||""}',4);event.stopPropagation();">4</button>
+                <button onclick="rateNote('${note.title}','${note.author}','${note.accessCode||""}',5);event.stopPropagation();">5</button>
+              </span>
+            </div>`;
+        } else {
+          rateButtons = `<div class="rate-row">You rated this note.</div>`;
+        }
+        let cardClick = "";
+        if (note.type === "file" && note.fileBase64) cardClick = `openNoteDetail('${note.title.replace(/'/g,"\\'")}', '${note.author.replace(/'/g,"\\'")}', '${note.accessCode||""}', true)`;
+        else if (note.type === "link" && note.link) cardClick = `openNoteDetail('${note.title.replace(/'/g,"\\'")}', '${note.author.replace(/'/g,"\\'")}', '${note.accessCode||""}', false)`;
+        else cardClick = `openNoteDetail('${note.title.replace(/'/g,"\\'")}', '${note.author.replace(/'/g,"\\'")}', '${note.accessCode||""}', false)`;
+        let showAccessCode = note._private && note.uploader === getCurrentUser() && note.accessCode;
+        let expired = note.expireAt && Date.now() > note.expireAt;
+        let canEditDelete = note.uploader === getCurrentUser();
+        return `
+          <div class="note-card" onclick="${cardClick}">
+            <div class="note-title">${note.title}
+              ${note._private ? '<span class="private-badge">Private</span>' : ''}
+              ${expired ? '<span class="expired-badge">Expired</span>' : ''}
+            </div>
+            <div class="note-author">By ${note.author} <span style="color:#888;font-size:0.97em;">| ${note.date || ""}</span></div>
+            <div class="note-tags">
+              ${(note.tags || []).map(tag => `<span class="note-tag">${tag}</span>`).join('')}
+            </div>
+            <div class="note-desc">${note.desc || ""}</div>
+            <div style="margin-bottom:8px;">
+              <button class="view-btn" onclick="event.stopPropagation(); ${cardClick}">View Note</button>
+              ${showAccessCode ? `<span class="access-code-on-card">Passcode: <b>${note.accessCode}</b></span>` : ""}
+            </div>
+            <div class="note-rating">${ratingStars}</div>
+            ${rateButtons}
+            ${canEditDelete ? `
+              <div class="note-actions">
+                <button onclick="event.stopPropagation(); editNote('${note.title.replace(/'/g,"\\'")}', '${note.author.replace(/'/g,"\\'")}', '${note.accessCode||""}')">Edit</button>
+                <button onclick="event.stopPropagation(); deleteNote('${note.title.replace(/'/g,"\\'")}', '${note.author.replace(/'/g,"\\'")}', '${note.accessCode||""}')">Delete</button>
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }
+
+      // Render only the selected tab
+      let html = "";
+      if (notesTab === 'my') {
+        if (myNotes.length === 0) {
+          html = `<div style="color:#888;text-align:center;margin:32px 0;">You have no notes yet.</div>`;
+        } else {
+          html = myNotes.map(renderNoteCard).join('');
+        }
+      } else {
+        if (otherNotes.length === 0) {
+          html = `<div style="color:#888;text-align:center;margin:32px 0;">No notes found.</div>`;
+        } else {
+          html = otherNotes.map(renderNoteCard).join('');
+        }
+      }
+      grid.innerHTML = html;
+    }
+
+    // Add a random sample note if not already present
+    (function addSampleNote() {
+      const sampleTitle = "Photosynthesis Basics";
+      const sampleAuthor = "Alex Green";
+      // Check if sample note already exists
+      let exists = publicNotes.some(n => n.title === sampleTitle && n.author === sampleAuthor);
+      if (!exists) {
+        // Example PDF file as base64 (small blank PDF)
+        const sampleBase64 = "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8Pj4vTWVkaWFCb3hbMCAwIDYxMiA3OTJdL0NvbnRlbnRzIDQgMCBSPj4KZW5kb2JqCjQgMCBvYmoKPDwvTGVuZ3RoIDUgMCBSPj4Kc3RyZWFtCgpCBiAKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjAKZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDExIDAwMDAwIG4gCjAwMDAwMDA3NiAwMDAwMCBuIAowMDAwMDAwMTYgMDAwMDAgbiAKMDAwMDAwMDYyIDAwMDAwIG4gCnRyYWlsZXIKPDwvUm9vdCAxIDAgUi9TaXplIDY+PgpzdGFydHhyZWYKODgKJSVFT0YK";
+        let sampleNote = {
+          title: sampleTitle,
+          subtitle: "How plants make food",
+          subject: "Biology",
+          author: sampleAuthor,
+          tags: ["Biology", "Photosynthesis", "Grade 9"],
+          desc: "A simple overview of photosynthesis for beginners.",
+          type: "file",
+          rating: 4.5,
+          ratingCount: 2,
+          date: new Date().toISOString().slice(0,10),
+          popularity: 5,
+          content: "Photosynthesis is the process by which green plants use sunlight to synthesize foods from carbon dioxide and water.",
+          uploader: "Alex Green",
+          fileName: "photosynthesis-basics.pdf",
+          fileBase64: sampleBase64,
+          summary: "Photosynthesis lets plants turn sunlight into food. This note covers the basics for students."
+        };
+        publicNotes.unshift(sampleNote);
+        localStorage.setItem('publicNotes', JSON.stringify(publicNotes));
+      }
+    })();
+
+    (function addManySampleNotes() {
+      const subjects = [
+        "Math", "Science", "English", "Chemistry", "Geo", "Biology", "Physics", "Arts", "Others"
+      ];
+      const topics = [
+        "Algebra Basics", "Newton's Laws", "Shakespeare Sonnets", "Periodic Table", "World Maps",
+        "Cell Structure", "Thermodynamics", "Impressionism", "Creative Writing", "Statistics",
+        "Genetics", "Electromagnetism", "Poetry Analysis", "Organic Chemistry", "Geology",
+        "Ecology", "Quantum Physics", "Sculpture", "Essay Writing", "Probability"
+      ];
+      const authors = [
+        "Sam Lee", "Priya Patel", "John Smith", "Emily Chen", "Carlos Ruiz", "Fatima Noor",
+        "Liam O'Brien", "Sophia Rossi", "Mia Kim", "Noah Brown", "Lucas Wang", "Olivia Davis"
+      ];
+      const descs = [
+        "A concise summary for quick revision.",
+        "Detailed explanations with examples.",
+        "Great for exam preparation.",
+        "Includes diagrams and key points.",
+        "Beginner-friendly overview.",
+        "Advanced concepts explained simply.",
+        "Step-by-step solutions.",
+        "Useful for group study.",
+        "Covers all important topics.",
+        "Easy to understand notes."
+      ];
+      // Helper to random date string (some within 3 days, some older)
+      function randomDateStr() {
+        const now = new Date();
+        const isNew = Math.random() < 0.4; // ~40% are new
+        let d = new Date(now);
+        if (isNew) {
+          d.setDate(now.getDate() - Math.floor(Math.random() * 3)); // 0-2 days ago
+        } else {
+          d.setDate(now.getDate() - (3 + Math.floor(Math.random() * 20))); // 3-22 days ago
+        }
+        return d.toISOString().slice(0, 10);
+      }
+      // Helper to random base64 PDF (same as your sample)
+      const sampleBase64 = "data:application/pdf;base64,JVBERi0xLjQKJeLjz9MKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoKMiAwIG9iago8PC9UeXBlL1BhZ2VzL0tpZHNbMyAwIFJdL0NvdW50IDE+PgplbmRvYmoKMyAwIG9iago8PC9UeXBlL1BhZ2UvUGFyZW50IDIgMCBSL1Jlc291cmNlczw8Pj4vTWVkaWFCb3hbMCAwIDYxMiA3OTJdL0NvbnRlbnRzIDQgMCBSPj4KZW5kb2JqCjQgMCBvYmoKPDwvTGVuZ3RoIDUgMCBSPj4Kc3RyZWFtCgpCBiAKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqCjAKZW5kb2JqCnhyZWYKMCA2CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDExIDAwMDAwIG4gCjAwMDAwMDA3NiAwMDAwMCBuIAowMDAwMDAwMTYgMDAwMDAgbiAKMDAwMDAwMDYyIDAwMDAwIG4gCnRyYWlsZXIKPDwvUm9vdCAxIDAgUi9TaXplIDY+PgpzdGFydHhyZWYKODgKJSVFT0YK";
+      // Only add if not already present
+      if (publicNotes.length < 50) {
+        for (let i = 0; i < 55; i++) {
+          const subject = subjects[Math.floor(Math.random() * subjects.length)];
+          const topic = topics[Math.floor(Math.random() * topics.length)] + " " + (i+1);
+          const author = authors[Math.floor(Math.random() * authors.length)];
+          const desc = descs[Math.floor(Math.random() * descs.length)];
+          const date = randomDateStr();
+          const tags = [subject, topic.split(" ")[0], "Grade " + (8 + (i % 5))];
+          publicNotes.push({
+            title: topic,
+            subtitle: desc,
+            subject,
+            author,
+            tags,
+            desc,
+            type: "file",
+            rating: Math.round((3 + Math.random() * 2) * 10) / 10,
+            ratingCount: Math.floor(Math.random() * 10) + 1,
+            date,
+            popularity: Math.floor(Math.random() * 100),
+            content: desc + " This note covers " + topic + " in " + subject + ".",
+            uploader: author,
+            fileName: topic.toLowerCase().replace(/\s+/g, "-") + ".pdf",
+            fileBase64: sampleBase64,
+            summary: desc
+          });
+        }
+        localStorage.setItem('publicNotes', JSON.stringify(publicNotes));
+      }
+    })();
+
+    function openNoteDetail(title, author, code, isFile) {
+      cleanExpiredNotes();
+      let note = publicNotes.find(n => n.title === title && n.author === author)
+        || Object.values(privateNotes).flat().find(n => n.title === title && n.author === author && (n.accessCode || "") === code);
+      if (!note) { alert("Note not found."); return; }
+      if (note.expireAt && Date.now() > note.expireAt) {
+        alert("This note has expired.");
+        renderNotes();
+        return;
+      }
+      if (note._private && note.uploader !== getCurrentUser()) {
+        let allowedCodes = JSON.parse(localStorage.getItem('allowedAccessCodes') || '[]');
+        if (!allowedCodes.includes(note.accessCode)) {
+          let userCode = prompt("This is a private note. Please enter the passcode:");
+          if (!userCode || userCode.trim().toUpperCase() !== note.accessCode) {
+            alert("Incorrect passcode.");
+            return;
+          }
+          allowedCodes.push(note.accessCode);
+          localStorage.setItem('allowedAccessCodes', JSON.stringify(allowedCodes));
+        }
+      }
+      if (note.type === "file" && note.fileBase64) {
+        // Download or open file in new tab
+        let a = document.createElement('a');
+        a.href = note.fileBase64;
+        a.download = note.fileName || "note";
+        a.target = "_blank";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => document.body.removeChild(a), 100);
+      } else if (note.type === "link" && note.link) {
+        window.open(note.link, "_blank");
+      } else {
+        let modal = document.createElement('div');
+        modal.className = "modal";
+        modal.style.display = "flex";
+        modal.innerHTML = `<div class="modal-content" style="max-width:600px;">
+          <h2>${note.title} ${note._private ? '<span class="private-badge">Private</span>' : ''}</h2>
+          <div style="color:#6b7a99;margin-bottom:8px;">By ${note.author} | ${note.date}</div>
+          <div style="margin-bottom:10px;">${(note.tags||[]).map(tag=>`<span class="note-tag">${tag}</span>`).join(' ')}</div>
+          <div style="margin-bottom:10px;"><b>Subtitle:</b> ${note.subtitle||''}</div>
+          <div style="margin-bottom:10px;"><b>Content:</b><br><div style="background:#f8faff;padding:10px;border-radius:8px;">${note.content||''}</div></div>
+          ${note.summary ? `<div class="summary-text"><b>Summary:</b> ${note.summary}</div>` : ""}
+          <button class="close-btn" onclick="this.closest('.modal').remove()">Close</button>
+        </div>`;
+        document.body.appendChild(modal);
+      }
+    }
+    window.openNoteDetail = openNoteDetail;
+
+    function editNote(title, author, code) {
+      let note = publicNotes.find(n => n.title === title && n.author === author)
+        || Object.values(privateNotes).flat().find(n => n.title === title && n.author === author && (n.accessCode || "") === code);
+      if (!note) { alert("Note not found."); return; }
+      let modal = document.createElement('div');
+      modal.className = "modal";
+      modal.style.display = "flex";
+      modal.innerHTML = `<div class="edit-modal-content">
+        <label>Title</label>
+        <input type="text" id="editTitle" value="${note.title}">
+        <label>Tags (comma separated)</label>
+        <input type="text" id="editTags" value="${(note.tags||[]).filter((t,i)=>i>0).join(', ')}">
+        <div class="modal-actions">
+          <button class="close-btn" onclick="this.closest('.modal').remove()">Cancel</button>
+          <button class="add-btn" onclick="saveEditNote('${title.replace(/'/g,"\\'")}', '${author.replace(/'/g,"\\'")}', '${code||""}')">Save</button>
+        </div>
+      </div>`;
+      document.body.appendChild(modal);
+    }
+    window.editNote = editNote;
+
+    function saveEditNote(title, author, code) {
+      let note = publicNotes.find(n => n.title === title && n.author === author)
+        || Object.values(privateNotes).flat().find(n => n.title === title && n.author === author && (n.accessCode || "") === code);
+      if (!note) { alert("Note not found."); return; }
+      note.title = document.getElementById('editTitle').value;
+      note.subtitle = document.getElementById('editSubtitle').value;
+      note.tags = [note.subject, ...document.getElementById('editTags').value.split(',').map(t=>t.trim()).filter(Boolean)];
+      note.content = document.getElementById('editContent').innerHTML;
+      if (publicNotes.includes(note)) {
+        localStorage.setItem('publicNotes', JSON.stringify(publicNotes));
+      } else {
+        localStorage.setItem('privateNotes', JSON.stringify(privateNotes));
+      }
+      document.querySelectorAll('.modal').forEach(m=>m.remove());
+      renderNotes();
+    }
+    window.saveEditNote = saveEditNote;
+
+    function deleteNote(title, author, code) {
+      if (!confirm("Are you sure you want to delete this note?")) return;
+      let idx = publicNotes.findIndex(n => n.title === title && n.author === author);
+      if (idx !== -1) {
+        publicNotes.splice(idx, 1);
+        localStorage.setItem('publicNotes', JSON.stringify(publicNotes));
+        renderNotes();
+        return;
+      }
+      let found = false;
+      Object.keys(privateNotes).forEach(passcode => {
+        let arr = privateNotes[passcode];
+        let i = arr.findIndex(n => n.title === title && n.author === author && (n.accessCode || "") === code);
+        if (i !== -1) {
+          arr.splice(i, 1);
+          if (arr.length === 0) delete privateNotes[passcode];
+          found = true;
+        }
+      });
+      if (found) {
+        localStorage.setItem('privateNotes', JSON.stringify(privateNotes));
+        renderNotes();
+      }
+    }
+    window.deleteNote = deleteNote;
+
+    function rateNote(title, author, code, stars) {
+      const key = title + author + (code || "");
+      if (ratedNotes[key]) return;
+      let note = publicNotes.find(n => n.title === title && n.author === author)
+        || Object.values(privateNotes).flat().find(n => n.title === title && n.author === author && (n.accessCode || "") === code);
+      if (!note) return;
+      if (!note.ratingCount) note.ratingCount = 0;
+      if (!note.rating) note.rating = 0;
+      note.rating = ((note.rating * note.ratingCount) + stars) / (note.ratingCount + 1);
+      note.ratingCount += 1;
+      ratedNotes[key] = true;
+      localStorage.setItem('publicNotes', JSON.stringify(publicNotes));
+      localStorage.setItem('privateNotes', JSON.stringify(privateNotes));
+      renderNotes();
+    }
+    window.rateNote = rateNote;
+
+    document.getElementById('searchInput').addEventListener('input', renderNotes);
+    document.getElementById('subjectFilter').addEventListener('change', renderNotes);
+    document.getElementById('dateFilter').addEventListener('change', renderNotes);
+    document.getElementById('popularityFilter').addEventListener('change', renderNotes);
+
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'publicNotes' || e.key === 'privateNotes' || e.key === 'allowedAccessCodes' || e.key === 'myPrivateCodes') renderNotes();
+    });
+
+    function switchNotesTab(tab) {
+      notesTab = tab; // <-- This line is required!
+      const myNotesTab = document.getElementById('tab-my-notes');
+      const allNotesTab = document.getElementById('tab-all-notes');
+      const isMyNotes = tab === 'my';
+      myNotesTab.classList.toggle('active', isMyNotes);
+      allNotesTab.classList.toggle('active', !isMyNotes);
+      renderNotes();
+    }
+  </script>
+</body>
+</html>

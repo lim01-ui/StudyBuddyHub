@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Discussions | Study Buddy Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"/>
+  <style>
+    body {
+      background: #f7f9fd;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      color: #222 !important;
+    }
+    .main-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 24px 0 28px 0;
+      background: none;
+      border: none;
+      box-shadow: none;
+    }
+    .main-tab {
+      background: #f0f4ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 32px;
+      font-size: 1.13em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #e0e7ff33;
+      outline: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+      min-width: 150px;
+      justify-content: center;
+    }
+    .main-tab.active,
+    .main-tab[aria-current="page"] {
+      background: #fff;
+      color: #222;
+      border-bottom: 2.5px solid #7b2ff2;
+      box-shadow: 0 4px 16px #e0e7ff44;
+      z-index: 1;
+    }
+    .main-tab:hover:not(.active):not([aria-current="page"]) {
+      background: #e0e7ff;
+      color: #6a5af9;
+    }
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto 24px auto;
+      padding: 24px 16px 0 16px;
+      position: relative;
+    }
+    .discussions-title {
+      font-size: 1.6em;
+      font-weight: 700;
+      color: #222 !important;
+    }
+    .start-discussion-btn {
+      background: linear-gradient(90deg, #4a90e2 60%, #a084ee 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-size: 1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-left: 12px;
+    }
+    .start-discussion-btn:hover {
+      background: #4263eb;
+    }
+    .discussion-list {
+      max-width: 1100px;
+      margin: 0 auto 32px auto;
+      padding: 0 16px;
+    }
+    .discussion-card {
+      cursor:pointer;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #eaf0ff;
+      padding: 24px 28px 18px 28px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      position: relative;
+    }
+    .discussion-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3em;
+      font-weight: 700;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .discussion-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+    .discussion-content {
+      flex: 1;
+    }
+    .discussion-title {
+      font-size: 1.15em;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #222 !important;
+    }
+    .discussion-meta {
+      color: #6b7a99;
+      font-size: 0.98em;
+      margin-bottom: 8px;
+    }
+    .discussion-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      margin-top: 8px;
+      font-size: 1em;
+    }
+    .discussion-actions span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      color: #6b7a99;
+      transition: color 0.15s;
+    }
+    .discussion-actions span.liked {
+      color: #ff4d4f;
+      font-weight: 600;
+    }
+    .discussion-actions span:hover {
+      color: #4263eb;
+    }
+    .discussion-actions .fa-share {
+      color: #4263eb;
+      background: #eaf0ff;
+      border-radius: 50%;
+      padding: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .discussion-actions .fa-share:hover {
+      background: #4263eb;
+      color: #fff;
+    }
+    .discussion-actions .fa-heart, .discussion-actions .fa-comment {
+      font-size: 1.1em;
+    }
+    .discussion-actions .fa-heart {
+      transition: color 0.15s;
+    }
+    .discussion-actions .fa-heart.liked {
+      color: #ff4d4f;
+    }
+    .discussion-actions .fa-share {
+      margin-left: 2px;
+    }
+    .discussion-actions .fa-comment {
+      color: #4263eb;
+    }
+    .discussion-actions .fa-heart {
+      color: #ff4d4f;
+    }
+    .discussion-actions .fa-share {
+      color: #4263eb;
+    }
+    .discussion-actions .fa-share:hover {
+      color: #222;
+    }
+    .discussion-actions .report-btn {
+      color: #e74c3c;
+      background: #fff0f0;
+      border: none;
+      border-radius: 50%;
+      padding: 6px;
+      margin-left: 4px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      outline: none;
+    }
+    .discussion-actions .report-btn:hover {
+      background: #e74c3c;
+      color: #fff;
+    }
+    .reply-btn {
+      background: #e0e7ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 16px;
+      font-size: 0.98em;
+      cursor: pointer;
+      font-weight: 500;
+      margin-top: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .reply-btn:hover {
+      background: #7b2ff2;
+      color: #fff;
+    }
+    .reply-list {
+      margin-top: 12px;
+      margin-left: 12px;
+      border-left: 2px solid #e0e7ff;
+      padding-left: 12px;
+    }
+    .reply-item {
+      margin-bottom: 10px;
+      color: #444 !important;
+      font-size: 0.98em;
+    }
+    .reply-meta {
+      color: #6b7a99 !important;
+      font-size: 0.92em;
+      margin-bottom: 2px;
+    }
+    .start-new-section {
+      max-width: 1100px;
+      margin: 0 auto 48px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #eaf0ff;
+      padding: 28px 28px 22px 28px;
+    }
+    .start-new-title {
+      font-size: 1.2em;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #222 !important;
+    }
+    .start-new-desc {
+      color: #6b7a99 !important;
+      font-size: 1em;
+      margin-bottom: 16px;
+    }
+    .start-new-form input, .start-new-form textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 7px;
+      border: 1.5px solid #e0e7ff;
+      font-size: 1em;
+      background: #f9fafb;
+      margin-bottom: 10px;
+      margin-top: 4px;
+      outline: none;
+      transition: border 0.2s;
+      color: #222 !important;
+    }
+    .start-new-form input:focus, .start-new-form textarea:focus {
+      border: 1.5px solid #4a90e2;
+      background: #f0f7ff;
+    }
+    .tag-list {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .tag-btn {
+      background: #eaf0ff;
+      color: #4263eb;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 16px;
+      font-size: 0.98em;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .tag-btn.selected, .tag-btn:hover {
+      background: #4263eb;
+      color: #fff !important;
+    }
+    .post-discussion-btn {
+      background: #4263eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 32px;
+      font-size: 1.1em;
+      font-weight: 700;
+      cursor: pointer;
+      float: right;
+      margin-top: 10px;
+      transition: background 0.15s;
+    }
+    .post-discussion-btn:hover {
+      background: #222;
+    }
+    @media (max-width: 900px) {
+      .discussion-list, .start-new-section, .header-bar { max-width: 99vw; }
+      .main-tabs { gap: 1.2em; max-width: 98vw; }
+      .main-tab { font-size: 1.1em; padding: 0.4em 1em; min-width: 100px; }
+    }
+    @media (max-width: 700px) {
+      .header-bar { flex-direction: column; align-items: stretch; gap: 10px; }
+      .discussion-card { flex-direction: column; gap: 10px; }
+      .discussion-avatar { margin-bottom: 8px; }
+      .start-discussion-btn { padding: 8px 12px; font-size: 0.98em; }
+      .post-discussion-btn { width: 100%; float: none; }
+      .main-tab { font-size: 1em; padding: 8px 12px; min-width: 80px; }
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      align-items: center; justify-content: center;
+      background: #0008;
+      z-index: 9999;
+    }
+    .modal.show {
+      display: flex;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 2em;
+      border-radius: 12px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 2px 16px #0002;
+    }
+    .discussion-detail-view {
+      max-width: 700px;
+      margin: 32px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #eaf0ff;
+      padding: 32px 32px 24px 32px;
+      position: relative;
+    }
+    .back-btn {
+      background: #e0e7ff;
+      color: #7b2ff2;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 18px;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 18px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .back-btn:hover {
+      background: #7b2ff2;
+      color: #fff;
+    }
+    .discussion-card button[title="Delete"]:hover {
+      color: #fff;
+      background: #e74c3c;
+      border-radius: 50%;
+    }
+    .discussion-card button[title="Edit"]:hover {
+      color: #fff;
+      background: #4263eb;
+      border-radius: 50%;
+    }
+    .edit-discussion-actions {
+      margin-top: 8px;
+    }
+    .edit-discussion-actions button {
+      margin-right: 8px;
+    }
+    /* Replies Drawer Styles */
+    .replies-drawer {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 420px;
+      max-width: 98vw;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -4px 0 24px #0002;
+      z-index: 2000;
+      overflow-y: auto;
+      transition: transform 0.25s cubic-bezier(.4,0,.2,1);
+      transform: translateX(100%);
+      display: flex;
+      flex-direction: column;
+    }
+    .replies-drawer.open {
+      transform: translateX(0);
+    }
+    .replies-drawer-header {
+      padding: 18px 24px 12px 24px;
+      border-bottom: 1px solid #e0e7ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f6f8fc;
+    }
+    .replies-drawer-title {
+      font-size: 1.1em;
+      font-weight: 600;
+      color: #222;
+    }
+    .replies-drawer-close {
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      color: #7b2ff2;
+      cursor: pointer;
+      padding: 0 6px;
+      border-radius: 50%;
+      transition: background 0.15s;
+    }
+    .replies-drawer-close:hover {
+      background: #e0e7ff;
+    }
+    .replies-drawer-content {
+      padding: 18px 24px 24px 24px;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .replies-drawer-footer {
+      padding: 12px 24px 18px 24px;
+      border-top: 1px solid #e0e7ff;
+      background: #f6f8fc;
+    }
+    /* Add to your <style> section */
+    .reply-item .report-btn {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      font-size: 1.05em;
+      padding: 4px 6px;
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      transition: background 0.15s, color 0.15s;
+    }
+    .reply-item .report-btn:hover,
+    .reply-item .report-btn:focus {
+      background: #ffeaea;
+      color: #fff;
+    }
+    .reply-item .report-btn .fa-flag {
+      pointer-events: none;
+    }
+    .reply-item .report-btn[aria-label]:hover::after,
+    .reply-item .report-btn[aria-label]:focus::after {
+      content: attr(aria-label);
+      position: absolute;
+      left: 110%;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #222;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.95em;
+      white-space: nowrap;
+      z-index: 10;
+      margin-left: 8px;
+    }
+    @media (max-width: 600px) {
+      .replies-drawer { width: 100vw; }
+    }
+    .profile-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #e0e7ff;
+      color: #7b2ff2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1em;
+      font-weight: 700;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <nav class="topnav" style="width:100%;background:#fff;box-shadow:0 2px 12px #e0e7ff33;display:flex;align-items:center;justify-content:space-between;padding:1.2em 3em 1.2em 2em;position:sticky;top:0;z-index:10;">
+    <div class="logo" style="font-size:2em;font-weight:700;color:#7b2ff2;display:flex;align-items:center;gap:0.7em;letter-spacing:1px;">
+      <i class="fa-solid fa-book"></i> Study Buddy Hub
+    </div>
+  </nav>
+  <div class="main-tabs">
+    <a href="dashboard.html" class="main-tab"><i class="fa-solid fa-house"></i> Dashboard</a>
+    <a href="Planner.html" class="main-tab"><i class="fa-solid fa-calendar-check"></i> Study Planner</a>
+    <a href="groups.html" class="main-tab"><i class="fa-solid fa-users"></i> Study Groups</a>
+    <a href="notes.html" class="main-tab"><i class="fa-solid fa-book"></i> Notes</a>
+    <a href="discussions.html" class="main-tab active" aria-current="page"><i class="fa-solid fa-comments"></i> Discussions</a>
+    <a href="profile.html" class="main-tab"><i class="fa-solid fa-user"></i> Profile</a>
+  </div>
+  <div class="header-bar" id="headerBar">
+    <div class="discussions-title">Community Discussions</div>
+  </div>
+  <div style="text-align:center;margin:32px 0;">
+    <button id="showStartDiscussionBtn" class="start-discussion-btn" style="font-size:1.1em;padding:12px 32px;">
+      <i class="fa fa-plus"></i> Start Discussion
+    </button>
+  </div>
+  <div class="discussion-list" id="discussionList"></div>
+  <div class="discussion-detail-view" id="discussionDetail" style="display:none"></div>
+  <!-- Reply Modal -->
+  <div class="modal" id="replyModal">
+    <div class="modal-content">
+      <h3 style="margin-top:0;">Reply to Discussion</h3>
+      <textarea id="replyInput" rows="3" style="width:100%;padding:8px;border-radius:6px;border:1.5px solid #e0e7ff;margin-bottom:1em;" placeholder="Write your reply..."></textarea>
+      <div style="text-align:right;">
+        <button onclick="closeReplyModal()" style="margin-right:8px;">Cancel</button>
+        <button onclick="submitReply()" style="background:#4263eb;color:#fff;border:none;border-radius:6px;padding:6px 18px;">Post Reply</button>
+      </div>
+    </div>
+  </div>
+  <!-- Replies Drawer -->
+  <div id="repliesDrawer" class="replies-drawer">
+    <div class="replies-drawer-header">
+      <span class="replies-drawer-title" id="repliesDrawerTitle"></span>
+      <button class="replies-drawer-close" onclick="closeRepliesDrawer()">&times;</button>
+    </div>
+    <div class="replies-drawer-content" id="repliesDrawerContent"></div>
+    <div class="replies-drawer-footer" id="repliesDrawerFooter"></div>
+  </div>
+  <!-- Report Modal -->
+  <div class="modal" id="reportModal">
+    <div class="modal-content" style="max-width:350px;">
+      <h3 style="margin-top:0;">Report Discussion</h3>
+      <div style="margin-bottom:10px;">Why are you reporting this discussion?</div>
+      <select id="reportReason" style="width:100%;padding:8px;border-radius:6px;border:1.5px solid #e0e7ff;margin-bottom:12px;">
+        <option value="">Select a reason</option>
+        <option value="Spam">Spam or advertising</option>
+        <option value="Harassment">Harassment or bullying</option>
+        <option value="Inappropriate">Inappropriate content</option>
+        <option value="Other">Other</option>
+      </select>
+      <textarea id="reportDetails" rows="2" style="width:100%;padding:8px;border-radius:6px;border:1.5px solid #e0e7ff;" placeholder="Additional details (optional)"></textarea>
+      <div style="text-align:right;margin-top:12px;">
+        <button onclick="closeReportModal()" style="margin-right:8px;">Cancel</button>
+        <button onclick="submitReport()" style="background:#e74c3c;color:#fff;border:none;border-radius:6px;padding:6px 18px;">Submit Report</button>
+      </div>
+    </div>
+  </div>
+  <!-- Start Discussion Modal -->
+  <div class="modal" id="startDiscussionModal">
+    <div class="modal-content" style="max-width:480px;">
+      <h3 style="margin-top:0;">Start a Discussion</h3>
+      <form class="start-new-form" id="discussionForm" autocomplete="off">
+        <input type="text" id="discussionTitle" placeholder="Discussion title..." required>
+        <textarea id="discussionContent" rows="3" placeholder="What would you like to discuss?" required></textarea>
+        <div class="tag-list" id="tagList">
+          <button type="button" class="tag-btn" data-tag="Question">Question</button>
+          <button type="button" class="tag-btn" data-tag="Study Tips">Study Tips</button>
+          <button type="button" class="tag-btn" data-tag="Resources">Resources</button>
+        </div>
+        <div style="text-align:right;margin-top:10px;">
+          <button type="button" onclick="closeStartDiscussionModal()" style="margin-right:8px;">Cancel</button>
+          <button type="submit" class="post-discussion-btn">Post Discussion</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Toast container will be created dynamically -->
+  <script>
+    function getCurrentUserKey() {
+      let email = localStorage.getItem('currentUserEmail');
+      if (!email) email = localStorage.getItem('userName');
+      return email ? 'profile_' + email.toLowerCase() : null;
+    }
+    function getCurrentProfile() {
+      const key = getCurrentUserKey();
+      if (!key) return null;
+      return JSON.parse(localStorage.getItem(key) || 'null');
+    }
+    function updateNavAvatar() {
+      // Get the current user's profile from localStorage
+      let profile = null;
+      const email = localStorage.getItem('currentUserEmail');
+      if (email) {
+        profile = JSON.parse(localStorage.getItem('profile_' + email.toLowerCase()) || 'null');
+      }
+      if (!profile) {
+        // fallback to userName if no email
+        const name = localStorage.getItem('userName') || '';
+        profile = { name: name };
+      }
+
+      // Update nav username and avatar
+      let navAvatar = document.getElementById('nav-avatar');
+      let navUsername = document.getElementById('nav-username');
+      if (!navAvatar || !navUsername) return;
+
+      if (profile.avatar) {
+        navAvatar.innerHTML = `<img src="${profile.avatar}" alt="Avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        navAvatar.style.background = "none";
+        navAvatar.style.color = "inherit";
+      } else {
+        let initials = profile.name ? profile.name.trim()[0].toUpperCase() : 'U';
+        navAvatar.textContent = initials;
+        navAvatar.innerHTML = ""; // clear any previous img
+        navAvatar.style.background = "#e0e7ff";
+        navAvatar.style.color = "#7b2ff2";
+      }
+      navUsername.innerText = profile.name || '';
+    }
+
+    window.addEventListener('storage', function() {
+      updateNavAvatar();
+    });
+    window.addEventListener('DOMContentLoaded', function() {
+      updateNavAvatar();
+      // Demo data setup
+      if (!localStorage.getItem('discussions')) {
+        for (let i = 0; i < demoDiscussions.length; i++) {
+          demoDiscussions[i].repliesList = getTopicReplies(i, Math.floor(Math.random() * 21) + 10);
+        }
+        setDiscussions(demoDiscussions);
+      }
+      renderDiscussions();
+    });
+
+    function logout() {
+      localStorage.removeItem('currentUserEmail');
+      localStorage.removeItem('userName');
+      window.location.href = 'login.html';
+    }
+
+    function getDiscussions() {
+      return JSON.parse(localStorage.getItem('discussions') || '[]');
+    }
+    function setDiscussions(discussions) {
+      localStorage.setItem('discussions', JSON.stringify(discussions));
+    }
+
+    let openReplies = {};
+    let editingReply = { idx: null, replyIdx: null };
+    let editingDiscussionIdx = null;
+    let selectedTag = null;
+    let reportDiscussionIdx = null;
+    let reportReplyIdx = null;
+    let reportReplyDiscussionIdx = null;
+
+    // Tag selection logic for modal
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('.tag-btn').forEach(btn => {
+        btn.onclick = function(e) {
+          e.preventDefault();
+          document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedTag = btn.getAttribute('data-tag');
+        };
+      });
+    });
+
+    function renderDiscussions() {
+      document.getElementById('discussionDetail').style.display = "none";
+      document.getElementById('discussionList').style.display = "";
+      document.getElementById('headerBar').style.display = "";
+      const discussions = getDiscussions();
+      const list = document.getElementById('discussionList');
+      list.innerHTML = '';
+      const profile = getCurrentProfile() || {};
+      const myName = (profile.name || 'Anonymous');
+      if (discussions.length === 0) {
+        list.innerHTML = `<div style="text-align:center;color:#888;margin:32px 0;">No discussions yet. Start one below!</div>`;
+        return;
+      }
+      discussions.slice().reverse().forEach((d, revIdx) => {
+        const idx = discussions.length - 1 - revIdx;
+        const initials = d.avatar ? '' : (d.authorName ? d.authorName.trim()[0].toUpperCase() : 'U');
+        let repliesCount = d.repliesList ? d.repliesList.length : 0;
+        let repliesHTML = '';
+        if (openReplies[idx] && d.repliesList && d.repliesList.length) {
+          repliesHTML = `<div class="reply-list" style="margin-top:10px;">` + d.repliesList.map((r, ridx) => {
+            const isOwnReply = (getCurrentProfile() && r.author === myName);
+            if (editingReply.idx === idx && editingReply.replyIdx === ridx) {
+              return `
+                <div class="reply-item" style="display:flex;align-items:flex-start;gap:10px;">
+                  <span class="profile-avatar" style="width:32px;height:32px;font-size:1em;">
+                    <img src="${r.avatar}" alt="Avatar">
+                  </span>
+                  <div style="flex:1;">
+                    <textarea id="editReplyInput" style="width:100%;border-radius:6px;border:1.5px solid #e0e7ff;">${r.text}</textarea>
+                    <div style="margin-top:4px;">
+                      <button onclick="saveEditReply(${idx},${ridx})" style="background:#4263eb;color:#fff;border:none;border-radius:6px;padding:3px 12px;">Save</button>
+                      <button onclick="cancelEditReply()" style="margin-left:6px;">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }
+            return `
+              <div class="reply-item" style="display:flex;align-items:flex-start;gap:10px;">
+                <span class="profile-avatar" style="width:32px;height:32px;font-size:1em;">
+                  <img src="${r.avatar}" alt="Avatar">
+                </span>
+                <div style="flex:1;">
+                  <div class="reply-meta">${r.author} &middot; ${timeAgo(r.date)}
+                    ${isOwnReply ? `
+                      <button title="Edit" onclick="editReply(${idx},${ridx})" style="background:none;border:none;color:#4263eb;cursor:pointer;font-size:0.95em;margin-left:8px;"><i class="fa fa-edit"></i></button>
+                      <button title="Delete" onclick="deleteReply(${idx},${ridx})" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:0.95em;"><i class="fa fa-trash"></i></button>
+                    ` : ''}
+                    <button class="report-btn" title="Report Reply" onclick="openReportReplyModal(${idx},${ridx});event.stopPropagation();" style="margin-left:8px;">
+                      <i class="fa fa-flag"></i>
+                    </button>
+                  </div>
+                  <div>${r.text.replace(/\n/g, "<br>")}</div>
+                </div>
+              </div>
+            `;
+          }).join('') + `</div>`;
+        }
+        const isOwnDiscussion = d.authorName && d.authorName === myName;
+        list.innerHTML += `
+        <div class="discussion-card" data-index="${idx}">
+          <div class="discussion-avatar">
+            ${d.avatar ? `<img src="${d.avatar}" alt="Avatar">` : initials}
+          </div>
+          <div class="discussion-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <div class="discussion-title">${d.title}</div>
+              ${isOwnDiscussion && editingDiscussionIdx !== idx ? `
+                <span>
+                  <button title="Edit" onclick="editDiscussion(${idx});event.stopPropagation();" style="background:none;border:none;cursor:pointer;color:#4263eb;font-size:1.2em;margin-right:6px;"><i class="fa fa-edit"></i></button>
+                  <button title="Delete" onclick="deleteDiscussion(${idx});event.stopPropagation();" style="background:none;border:none;cursor:pointer;color:#e74c3c;font-size:1.2em;"><i class="fa fa-trash"></i></button>
+                </span>
+              ` : ''}
+            </div>
+            <div class="discussion-meta">
+              by ${d.authorName || 'Unknown'} &nbsp; <span style="font-size:0.95em;">${timeAgo(d.createdAt)}</span>
+            </div>
+            <div id="discussion-content-${idx}">
+              ${editingDiscussionIdx === idx ? `
+                <textarea id="editDiscussionContent" style="width:100%;border-radius:6px;border:1.5px solid #e0e7ff;">${d.content}</textarea>
+                <div class="edit-discussion-actions">
+                  <button onclick="saveEditDiscussion(${idx})" style="background:#4263eb;color:#fff;border:none;border-radius:6px;padding:3px 12px;">Save</button>
+                  <button onclick="cancelEditDiscussion()" style="margin-left:6px;">Cancel</button>
+                </div>
+              ` : d.content.replace(/\n/g, "<br>")}
+            </div>
+            <div class="discussion-actions">
+              <span class="like-btn${d.liked ? ' liked' : ''}" onclick="likeDiscussion(event, ${idx})">
+                <i class="fa fa-heart${d.liked ? ' liked' : ''}"></i> <span class="like-count">${d.likes}</span> likes
+              </span>
+              <span onclick="toggleReplies(${idx})" style="user-select:none;">
+                <i class="fa fa-comment"></i> ${repliesCount} replies
+              </span>
+              <span onclick="shareDiscussion('${encodeURIComponent(d.title)}');event.stopPropagation();">
+                <i class="fa fa-share"></i> Share
+              </span>
+              <button class="report-btn" title="Report" onclick="openReportModal(${idx});event.stopPropagation();">
+                <i class="fa fa-flag"></i>
+              </button>
+            </div>
+            <button class="reply-btn" onclick="openReplyModal(${idx})"><i class="fa fa-reply"></i> Reply</button>
+            ${openReplies[idx] ? repliesHTML : ''}
+          </div>
+        </div>
+        `;
+      });
+    }
+
+    function editDiscussion(idx) {
+      editingDiscussionIdx = idx;
+      renderDiscussions();
+      setTimeout(() => {
+        document.getElementById('editDiscussionContent')?.focus();
+      }, 50);
+    }
+    function cancelEditDiscussion() {
+      editingDiscussionIdx = null;
+      renderDiscussions();
+    }
+    function saveEditDiscussion(idx) {
+      const val = document.getElementById('editDiscussionContent').value.trim();
+      if (!val) return;
+      let discussions = getDiscussions();
+      if (!discussions[idx]) return;
+      discussions[idx].content = val;
+      setDiscussions(discussions);
+      editingDiscussionIdx = null;
+      renderDiscussions();
+    }
+
+    function deleteDiscussion(idx) {
+      if (!confirm("Are you sure you want to delete this discussion?")) return;
+      let discussions = getDiscussions();
+      discussions.splice(idx, 1);
+      setDiscussions(discussions);
+      editingDiscussionIdx = null;
+      renderDiscussions();
+    }
+
+    function editReply(idx, replyIdx) {
+      editingReply = { idx, replyIdx };
+      renderDiscussions();
+      setTimeout(() => {
+        document.getElementById('editReplyInput')?.focus();
+      }, 50);
+    }
+    function cancelEditReply() {
+      editingReply = { idx: null, replyIdx: null };
+      renderDiscussions();
+    }
+    function saveEditReply(idx, replyIdx) {
+      const val = document.getElementById('editReplyInput').value.trim();
+      if (!val) return;
+      let discussions = getDiscussions();
+      if (!discussions[idx] || !discussions[idx].repliesList[replyIdx]) return;
+      discussions[idx].repliesList[replyIdx].text = val;
+      setDiscussions(discussions);
+      editingReply = { idx: null, replyIdx: null };
+      openReplies[idx] = true;
+      renderDiscussions();
+    }
+    function deleteReply(idx, replyIdx) {
+      if (!confirm("Delete this reply?")) return;
+      let discussions = getDiscussions();
+      if (!discussions[idx] || !discussions[idx].repliesList[replyIdx]) return;
+      discussions[idx].repliesList.splice(replyIdx, 1);
+      setDiscussions(discussions);
+      editingReply = { idx: null, replyIdx: null };
+      openReplies[idx] = true;
+      renderDiscussions();
+    }
+
+    function likeDiscussion(e, idx) {
+      e.stopPropagation();
+      let discussions = getDiscussions();
+      let d = discussions[idx];
+      if (!d) return;
+      if (!d.liked) {
+        d.likes = (d.likes || 0) + 1;
+        d.liked = true;
+      } else {
+        d.likes = Math.max(0, (d.likes || 1) - 1);
+        d.liked = false;
+      }
+      setDiscussions(discussions);
+      renderDiscussions();
+    }
+
+    let openRepliesDrawerIdx = null;
+
+    // Override toggleReplies to open the drawer
+    function toggleReplies(idx) {
+      openRepliesDrawer(idx);
+    }
+
+    function openRepliesDrawer(idx) {
+      openRepliesDrawerIdx = idx;
+      const discussions = getDiscussions();
+      const d = discussions[idx];
+      if (!d) return;
+      document.getElementById('repliesDrawerTitle').textContent = `${d.title} (${d.repliesList ? d.repliesList.length : 0} replies)`;
+      renderRepliesDrawer(idx);
+      document.getElementById('repliesDrawer').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeRepliesDrawer() {
+      document.getElementById('repliesDrawer').classList.remove('open');
+      document.body.style.overflow = '';
+      openRepliesDrawerIdx = null;
+    }
+
+    function renderRepliesDrawer(idx) {
+      const discussions = getDiscussions();
+      const d = discussions[idx];
+      const myName = (getCurrentProfile() || {}).name || 'Anonymous';
+      let repliesHTML = '';
+      if (d.repliesList && d.repliesList.length) {
+        repliesHTML = d.repliesList.map((r, ridx) => {
+          const isOwnReply = (r.author === myName);
+          if (editingReply.idx === idx && editingReply.replyIdx === ridx) {
+            return `
+              <div class="reply-item" style="display:flex;align-items:flex-start;gap:10px;">
+                <span class="profile-avatar" style="width:32px;height:32px;font-size:1em;">
+                  <img src="${r.avatar}" alt="Avatar">
+                </span>
+                <div style="flex:1;">
+                  <textarea id="editReplyInput" style="width:100%;border-radius:6px;border:1.5px solid #e0e7ff;">${r.text}</textarea>
+                  <div style="margin-top:4px;">
+                    <button onclick="saveEditReply(${idx},${ridx})" style="background:#4263eb;color:#fff;border:none;border-radius:6px;padding:3px 12px;">Save</button>
+                    <button onclick="cancelEditReply()" style="margin-left:6px;">Cancel</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }
+          return `
+            <div class="reply-item" style="display:flex;align-items:flex-start;gap:10px;">
+              <span class="profile-avatar" style="width:32px;height:32px;font-size:1em;">
+                <img src="${r.avatar}" alt="Avatar">
+              </span>
+              <div style="flex:1;">
+                <div class="reply-meta">${r.author} &middot; ${timeAgo(r.date)}
+                  ${isOwnReply ? `
+                    <button title="Edit" onclick="editReply(${idx},${ridx});event.stopPropagation();" style="background:none;border:none;color:#4263eb;cursor:pointer;font-size:0.95em;margin-left:8px;"><i class="fa fa-edit"></i></button>
+                    <button title="Delete" onclick="deleteReply(${idx},${ridx});event.stopPropagation();" style="background:none;border:none;color:#e74c3c;cursor:pointer;font-size:0.95em;"><i class="fa fa-trash"></i></button>
+                  ` : ''}
+                  <button class="report-btn" title="Report Reply" onclick="openReportReplyModal(${idx},${ridx});event.stopPropagation();" style="margin-left:8px;">
+                    <i class="fa fa-flag"></i>
+                  </button>
+                </div>
+                <div>${r.text.replace(/\n/g, "<br>")}</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } else {
+        repliesHTML = `<div style="color:#888;text-align:center;margin:32px 0;">No replies yet. Be the first to reply!</div>`;
+      }
+      document.getElementById('repliesDrawerContent').innerHTML = repliesHTML;
+
+      // Footer: quick reply box
+      document.getElementById('repliesDrawerFooter').innerHTML = `
+        <textarea id="drawerReplyInput" rows="2" style="width:100%;padding:8px;border-radius:6px;border:1.5px solid #e0e7ff;margin-bottom:8px;" placeholder="Write your reply..."></textarea>
+        <div style="text-align:right;">
+          <button onclick="drawerSubmitReply()" style="background:#4263eb;color:#fff;border:none;border-radius:6px;padding:6px 18px;">Post Reply</button>
+        </div>
+      `;
+    }
+
+    // Update edit/delete reply logic to re-render drawer if open
+    function editReply(idx, replyIdx) {
+      editingReply = { idx, replyIdx };
+      if (openRepliesDrawerIdx === idx) {
+        renderRepliesDrawer(idx);
+      } else {
+        renderDiscussions();
+      }
+      setTimeout(() => {
+        document.getElementById('editReplyInput')?.focus();
+      }, 50);
+    }
+    function cancelEditReply() {
+      editingReply = { idx: null, replyIdx: null };
+      if (openRepliesDrawerIdx !== null) {
+        renderRepliesDrawer(openRepliesDrawerIdx);
+      } else {
+        renderDiscussions();
+      }
+    }
+    function saveEditReply(idx, replyIdx) {
+      const val = document.getElementById('editReplyInput').value.trim();
+      if (!val) return;
+      let discussions = getDiscussions();
+      if (!discussions[idx] || !discussions[idx].repliesList[replyIdx]) return;
+      discussions[idx].repliesList[replyIdx].text = val;
+      setDiscussions(discussions);
+      editingReply = { idx: null, replyIdx: null };
+      if (openRepliesDrawerIdx === idx) {
+        renderRepliesDrawer(idx);
+      } else {
+        renderDiscussions();
+      }
+    }
+    function deleteReply(idx, replyIdx) {
+      if (!confirm("Delete this reply?")) return;
+      let discussions = getDiscussions();
+      if (!discussions[idx] || !discussions[idx].repliesList[replyIdx]) return;
+      discussions[idx].repliesList.splice(replyIdx, 1);
+      setDiscussions(discussions);
+      editingReply = { idx: null, replyIdx: null };
+      if (openRepliesDrawerIdx === idx) {
+        renderRepliesDrawer(idx);
+      } else {
+        renderDiscussions();
+      }
+    }
+
+    // Quick reply from drawer
+    function drawerSubmitReply() {
+      const text = document.getElementById('drawerReplyInput').value.trim();
+      if (!text || openRepliesDrawerIdx === null) return;
+      let discussions = getDiscussions();
+      let d = discussions[openRepliesDrawerIdx];
+      if (!d) return;
+      if (!d.repliesList) d.repliesList = [];
+      const profile = getCurrentProfile() || {};
+      let avatar = profile.avatar;
+      if (!avatar) {
+        avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || 'User')}&background=e0e7ff&color=7b2ff2&size=64`;
+      }
+      d.repliesList.push({
+        author: profile.name || 'Anonymous',
+        avatar: avatar,
+        text,
+        date: new Date().toISOString()
+      });
+      d.replies = d.repliesList.length;
+      setDiscussions(discussions);
+      document.getElementById('drawerReplyInput').value = '';
+      renderRepliesDrawer(openRepliesDrawerIdx);
+      // Auto-scroll to bottom
+      setTimeout(() => {
+        const content = document.getElementById('repliesDrawerContent');
+        content.scrollTop = content.scrollHeight;
+      }, 100);
+    }
+
+    function shareDiscussion(title) {
+      const url = window.location.origin + window.location.pathname + '#' + encodeURIComponent(title);
+      navigator.clipboard.writeText(url).then(() => {
+        showToast('Link copied!');
+      });
+    }
+
+    // Add this toast function and a toast container in your HTML:
+    function showToast(msg) {
+      let toast = document.getElementById('toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast';
+        toast.style.position = 'fixed';
+        toast.style.bottom = '32px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.background = '#4263eb';
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 28px';
+        toast.style.borderRadius = '8px';
+        toast.style.fontWeight = '600';
+        toast.style.fontSize = '1em';
+        toast.style.zIndex = 9999;
+        toast.style.boxShadow = '0 2px 12px #0002';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 1800);
+    }
+
+    // --- Demo Discussions and Topic-Specific Replies ---
+
+    const demoDiscussions = [
+      {
+        title: "Best study techniques for programming?",
+        content: "What are your favorite ways to learn programming efficiently?",
+        tag: "Study Tips",
+        authorName: "Alex Chen",
+        avatar: "",
+        createdAt: new Date(Date.now() - 2*60*60*1000).toISOString(),
+        likes: 45,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Anyone struggling with calculus derivatives?",
+        content: "I find derivatives really confusing. Any tips or resources?",
+        tag: "Question",
+        authorName: "Sarah Johnson",
+        avatar: "",
+        createdAt: new Date(Date.now() - 4*60*60*1000).toISOString(),
+        likes: 32,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Group study vs solo study - what works better?",
+        content: "Do you prefer studying alone or in groups? Why?",
+        tag: "Question",
+        authorName: "Mike Wilson",
+        avatar: "",
+        createdAt: new Date(Date.now() - 24*60*60*1000).toISOString(),
+        likes: 78,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "How do you manage exam stress?",
+        content: "Share your best strategies for staying calm and focused during exams.",
+        tag: "Study Tips",
+        authorName: "Priya Singh",
+        avatar: "",
+        createdAt: new Date(Date.now() - 3*60*60*1000).toISOString(),
+        likes: 21,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Recommended resources for learning Python?",
+        content: "What books, websites, or courses helped you master Python?",
+        tag: "Resources",
+        authorName: "Lucas White",
+        avatar: "",
+        createdAt: new Date(Date.now() - 5*60*60*1000).toISOString(),
+        likes: 54,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Balancing part-time work and studies",
+        content: "How do you effectively balance a job with your academic responsibilities?",
+        tag: "Question",
+        authorName: "Grace Turner",
+        avatar: "",
+        createdAt: new Date(Date.now() - 7*60*60*1000).toISOString(),
+        likes: 37,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Tips for effective online learning",
+        content: "What are your best practices for staying productive in online classes?",
+        tag: "Study Tips",
+        authorName: "Benjamin Lee",
+        avatar: "",
+        createdAt: new Date(Date.now() - 8*60*60*1000).toISOString(),
+        likes: 29,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "How to stay motivated throughout the semester?",
+        content: "Motivation drops after a few weeks. How do you keep going?",
+        tag: "Question",
+        authorName: "Chloe Evans",
+        avatar: "",
+        createdAt: new Date(Date.now() - 10*60*60*1000).toISOString(),
+        likes: 41,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Best note-taking apps for students?",
+        content: "Which digital tools do you use for organizing your notes?",
+        tag: "Resources",
+        authorName: "Noah Carter",
+        avatar: "",
+        createdAt: new Date(Date.now() - 12*60*60*1000).toISOString(),
+        likes: 33,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "How to prepare for technical interviews?",
+        content: "What resources and strategies helped you succeed in coding interviews?",
+        tag: "Question",
+        authorName: "Lily Brooks",
+        avatar: "",
+        createdAt: new Date(Date.now() - 14*60*60*1000).toISOString(),
+        likes: 56,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Dealing with procrastination",
+        content: "What are your best tips for overcoming procrastination?",
+        tag: "Study Tips",
+        authorName: "Jack Foster",
+        avatar: "",
+        createdAt: new Date(Date.now() - 16*60*60*1000).toISOString(),
+        likes: 27,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "How to improve public speaking skills?",
+        content: "Share your advice for becoming a more confident speaker.",
+        tag: "Question",
+        authorName: "Ella Reed",
+        avatar: "",
+        createdAt: new Date(Date.now() - 18*60*60*1000).toISOString(),
+        likes: 19,
+        liked: false,
+        repliesList: []
+      },
+      {
+        title: "Favorite places to study on campus?",
+        content: "Where do you find the best environment for focused study sessions?",
+        tag: "Question",
+        authorName: "Henry Murphy",
+        avatar: "",
+        createdAt: new Date(Date.now() - 20*60*60*1000).toISOString(),
+        likes: 22,
+        liked: false,
+        repliesList: []
+      }
+    ];
+
+    // Topic-specific replies for each discussion (index matches demoDiscussions)
+    const topicReplies = [
+      // 0: Programming study techniques
+      [
+        "Building small projects really helps me understand programming concepts.",
+        "I use spaced repetition for memorizing syntax and algorithms.",
+        "Practicing coding challenges daily on LeetCode keeps me sharp.",
+        "Pair programming with a friend has improved my coding skills a lot.",
+        "I keep a coding journal to track what I learn each day.",
+        "Breaking down problems into smaller functions makes them less intimidating.",
+        "Teaching others what I’ve learned helps me retain information.",
+        "I set weekly goals for learning new programming topics.",
+        "I review my old code to see how I can improve it.",
+        "I use the Pomodoro technique to stay focused during study sessions."
+      ],
+      // 1: Calculus derivatives
+      [
+        "Khan Academy has great videos on derivatives.",
+        "Practice is key—solve as many derivative problems as you can.",
+        "Visualizing the slope helps me understand derivatives better.",
+        "Don’t skip the chain rule; it’s essential for complex functions.",
+        "I make summary sheets for derivative rules and formulas.",
+        "Group study sessions help me see different approaches to problems.",
+        "I use Desmos to graph functions and their derivatives.",
+        "I break down each problem step by step to avoid mistakes.",
+        "I focus on understanding the concept, not just memorizing rules.",
+        "I practice derivatives with real-world examples, like velocity."
+      ],
+      // 2: Group vs solo study
+      [
+        "I prefer group study for brainstorming and sharing ideas.",
+        "Solo study helps me focus, but groups keep me motivated.",
+        "In groups, I learn from others’ perspectives.",
+        "I use solo study for memorization and groups for discussions.",
+        "Group study sessions help clarify difficult topics.",
+        "I set solo goals, then review them with my study group.",
+        "Teaching others in a group reinforces my learning.",
+        "Solo study is best for deep concentration.",
+        "I alternate between solo and group study for balance.",
+        "Group study keeps me accountable to my schedule."
+      ],
+      // 3: Exam stress
+      [
+        "Deep breathing exercises help me calm down before exams.",
+        "I prepare a checklist to avoid last-minute panic.",
+        "Listening to calming music reduces my anxiety.",
+        "I take short walks to clear my mind during study breaks.",
+        "I avoid caffeine on exam day to stay relaxed.",
+        "I review summaries instead of cramming the night before.",
+        "Getting enough sleep is my top priority before exams.",
+        "I talk to friends to share concerns and get support.",
+        "I use positive affirmations to boost my confidence.",
+        "I arrive early to the exam room to settle in."
+      ],
+      // 4: Python resources
+      [
+        "Automate the Boring Stuff with Python is a fantastic book.",
+        "I learned a lot from the Python documentation itself.",
+        "freeCodeCamp's Python course is very beginner-friendly.",
+        "I use Real Python for advanced tutorials.",
+        "Coursera has a great Python for Everybody course.",
+        "I practice on HackerRank and LeetCode for coding problems.",
+        "YouTube channels like Corey Schafer are very helpful.",
+        "I joined Python Discord for community support.",
+        "I use Jupyter Notebook for experimenting with code.",
+        "Stack Overflow is my go-to for troubleshooting."
+      ],
+      // 5: Balancing work and studies
+      [
+        "I use a planner to schedule work and study hours.",
+        "Setting boundaries with my employer helps me manage time.",
+        "I prioritize tasks each morning to stay organized.",
+        "I communicate my academic commitments to my boss.",
+        "I use weekends for catching up on assignments.",
+        "I avoid multitasking to maintain focus.",
+        "I ask for flexible shifts during exam periods.",
+        "Meal prepping saves me time during busy weeks.",
+        "I set aside time for self-care to avoid burnout.",
+        "I use reminders to keep track of deadlines."
+      ],
+      // 6: Online learning
+      [
+        "I keep my camera on to stay engaged in online classes.",
+        "I set up a dedicated study space at home.",
+        "I use noise-cancelling headphones to minimize distractions.",
+        "I participate in chat discussions to stay active.",
+        "I review recorded lectures if I miss anything.",
+        "I schedule regular breaks to avoid screen fatigue.",
+        "I use digital planners to organize assignments.",
+        "I turn off notifications during class time.",
+        "I join online study groups for accountability.",
+        "I ask questions in forums when I'm stuck."
+      ],
+      // 7: Motivation
+      [
+        "I set small, achievable goals to keep myself motivated.",
+        "Rewarding myself after completing tasks helps a lot.",
+        "I remind myself of my long-term goals regularly.",
+        "I study with friends to stay accountable.",
+        "I change my study environment to keep things fresh.",
+        "I track my progress to see how far I've come.",
+        "I listen to motivational podcasts during breaks.",
+        "I visualize my success at the end of the semester.",
+        "I avoid comparing myself to others.",
+        "I take breaks to avoid burnout."
+      ],
+      // 8: Note-taking apps
+      [
+        "Notion is my favorite for organizing notes and tasks.",
+        "I use OneNote for handwritten notes on my tablet.",
+        "Evernote is great for clipping web articles.",
+        "Google Keep is perfect for quick reminders.",
+        "I use GoodNotes for lecture slides and annotations.",
+        "Apple Notes syncs well across my devices.",
+        "I organize my notes by subject in Notion.",
+        "I use tags to quickly find important topics.",
+        "I back up my notes to Google Drive.",
+        "I share notes with classmates using OneNote."
+      ],
+      // 9: Technical interviews
+      [
+        "I practice coding problems daily on LeetCode.",
+        "Cracking the Coding Interview is a must-read book.",
+        "I review data structures and algorithms regularly.",
+        "Mock interviews with friends help reduce anxiety.",
+        "I study common interview questions for my field.",
+        "I practice explaining my solutions out loud.",
+        "I time myself to simulate real interview conditions.",
+        "I review my past projects and be ready to discuss them.",
+        "I use Glassdoor to research company-specific questions.",
+        "I focus on writing clean, readable code."
+      ],
+      // 10: Procrastination
+      [
+        "I break tasks into smaller steps to avoid feeling overwhelmed.",
+        "Setting deadlines for myself keeps me on track.",
+        "I use the Pomodoro technique to stay focused.",
+        "I remove distractions from my study area.",
+        "I reward myself after completing tasks.",
+        "I start with the easiest task to build momentum.",
+        "I use apps like Forest to limit phone usage.",
+        "I remind myself of the consequences of procrastination.",
+        "I ask a friend to check in on my progress.",
+        "I set daily goals and review them each night."
+      ],
+      // 11: Public speaking
+      [
+        "I practice in front of a mirror to build confidence.",
+        "Recording myself helps me spot areas for improvement.",
+        "I join clubs like Toastmasters for regular practice.",
+        "I focus on my breathing to stay calm.",
+        "I prepare cue cards with key points.",
+        "I watch TED Talks for inspiration.",
+        "I ask friends for constructive feedback.",
+        "I rehearse my speech multiple times.",
+        "I make eye contact with the audience.",
+        "I start with small groups before larger audiences."
+      ],
+      // 12: Study places
+      [
+        "The library's quiet zone is perfect for deep focus.",
+        "I love studying at the campus coffee shop.",
+        "The science building has great study nooks.",
+        "I use empty classrooms for group sessions.",
+        "The outdoor garden is peaceful for reading.",
+        "I book study rooms for group projects.",
+        "The student lounge is great for casual study.",
+        "I like the top floor of the main library.",
+        "I study in the computer lab for access to resources.",
+        "The campus park is nice on sunny days."
+      ]
+    ];
+
+    // Names for avatars
+    const demoNames = [
+      "Alex Chen", "Sarah Johnson", "Mike Wilson", "Taylor Lee", "Jordan Smith",
+      "Sam Patel", "Chris Kim", "Morgan Brown", "Jamie Garcia", "Pat Nguyen",
+      "Emily Clark", "David Martinez", "Sophia Lopez", "Daniel Evans", "Olivia King",
+      "Ethan Wright", "Ava Scott", "Mason Green", "Isabella Adams", "Logan Baker",
+      "Priya Singh", "Lucas White", "Grace Turner", "Benjamin Lee", "Chloe Evans",
+      "Noah Carter", "Lily Brooks", "Jack Foster", "Ella Reed", "Henry Murphy"
+    ];
+
+    // Helper: get a consistent randomuser.me image for a given name
+    function getProfileImageForName(name) {
+      // Hash the name to a number between 0-99 for randomuser.me
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      const gender = (hash % 2 === 0) ? 'men' : 'women';
+      const num = Math.abs(hash) % 100;
+      return `https://randomuser.me/api/portraits/${gender}/${num}.jpg`;
+    }
+
+    // Assign unique real photo and name for each demo discussion
+    function getRandomDemoAuthor() {
+      const name = demoNames[Math.floor(Math.random() * demoNames.length)];
+      const avatar = getProfileImageForName(name);
+      return { name, avatar };
+    }
+
+    // Assign unique real photo and name for each reply
+    function getTopicReplies(topicIdx, n) {
+      const pool = topicReplies[topicIdx];
+      let replies = [];
+      for (let i = 0; i < n; i++) {
+        let name = demoNames[Math.floor(Math.random() * demoNames.length)];
+        let avatar = getProfileImageForName(name);
+        let text = pool[Math.floor(Math.random() * pool.length)];
+        if (Math.random() > 0.8) {
+          let extra = pool[Math.floor(Math.random() * pool.length)];
+          if (extra !== text) text += " " + extra;
+        }
+        replies.push({
+          author: name,
+          avatar: avatar,
+          text,
+          date: new Date(Date.now() - Math.floor(Math.random() * 100000000)).toISOString()
+        });
+      }
+      return replies;
+    }
+
+    // Assign random author/avatars to each demo discussion
+    for (let i = 0; i < demoDiscussions.length; i++) {
+      const author = getRandomDemoAuthor();
+      demoDiscussions[i].authorName = author.name;
+      demoDiscussions[i].avatar = author.avatar;
+    }
+
+    // Modal logic for Start Discussion
+    document.getElementById('showStartDiscussionBtn').onclick = function() {
+      document.getElementById('startDiscussionModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('discussionTitle').focus();
+      }, 100);
+    };
+    function closeStartDiscussionModal() {
+      document.getElementById('startDiscussionModal').classList.remove('show');
+      document.getElementById('discussionForm').reset();
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+      selectedTag = null;
+    }
+    document.getElementById('discussionForm').onsubmit = function(e) {
+      e.preventDefault();
+      const title = document.getElementById('discussionTitle').value.trim();
+      const content = document.getElementById('discussionContent').value.trim();
+      if (!title || !content) return;
+      const profile = getCurrentProfile() || {};
+      const discussions = getDiscussions();
+      discussions.push({
+        title,
+        content,
+        tag: selectedTag,
+        authorName: profile.name || 'Anonymous',
+        avatar: profile.avatar || '',
+        createdAt: new Date().toISOString(),
+        likes: 0,
+        liked: false,
+        replies: 0,
+        repliesList: []
+      });
+      setDiscussions(discussions);
+      document.getElementById('discussionForm').reset();
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+      selectedTag = null;
+      closeStartDiscussionModal();
+      renderDiscussions();
+      showToast('Discussion posted!');
+    };
+
+    // Report modal logic for replies
+    function openReportReplyModal(discussionIdx, replyIdx) {
+      reportReplyDiscussionIdx = discussionIdx;
+      reportReplyIdx = replyIdx;
+      document.getElementById('reportReason').value = '';
+      document.getElementById('reportDetails').value = '';
+      document.getElementById('reportModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('reportReason').focus();
+      }, 50);
+    }
+    function openReportModal(idx) {
+      reportDiscussionIdx = idx;
+      document.getElementById('reportReason').value = '';
+      document.getElementById('reportDetails').value = '';
+      document.getElementById('reportModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('reportReason').focus();
+      }, 50);
+    }
+    function closeReportModal() {
+      document.getElementById('reportModal').classList.remove('show');
+      reportDiscussionIdx = null;
+      reportReplyDiscussionIdx = null;
+      reportReplyIdx = null;
+    }
+    function submitReport() {
+      const reason = document.getElementById('reportReason').value;
+      const details = document.getElementById('reportDetails').value.trim();
+      if (!reason) {
+        showToast('Please select a reason.');
+        return;
+      }
+      closeReportModal();
+      showToast('Thank you for your report. Our moderators will review it.');
+      let discussions = getDiscussions();
+      // If reporting a reply
+      if (reportReplyDiscussionIdx !== null && reportReplyIdx !== null) {
+        if (
+          discussions[reportReplyDiscussionIdx] &&
+          discussions[reportReplyDiscussionIdx].repliesList &&
+          discussions[reportReplyDiscussionIdx].repliesList[reportReplyIdx]
+        ) {
+          discussions[reportReplyDiscussionIdx].repliesList[reportReplyIdx].reported = true;
+          setDiscussions(discussions);
+        }
+        reportReplyDiscussionIdx = null;
+        reportReplyIdx = null;
+        return;
+      }
+      // If reporting a discussion
+      if (discussions[reportDiscussionIdx]) {
+        discussions[reportDiscussionIdx].reported = true;
+        setDiscussions(discussions);
+      }
+      reportDiscussionIdx = null;
+    }
+
+    // Reply modal logic
+    let replyModalDiscussionIdx = null;
+    function openReplyModal(idx) {
+      replyModalDiscussionIdx = idx;
+      document.getElementById('replyInput').value = '';
+      document.getElementById('replyModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('replyInput').focus();
+      }, 100);
+    }
+    function closeReplyModal() {
+      document.getElementById('replyModal').classList.remove('show');
+      replyModalDiscussionIdx = null;
+    }
+    function submitReply() {
+      const text = document.getElementById('replyInput').value.trim();
+      if (!text || replyModalDiscussionIdx === null) return;
+      let discussions = getDiscussions();
+      let d = discussions[replyModalDiscussionIdx];
+      if (!d) return;
+      if (!d.repliesList) d.repliesList = [];
+      const profile = getCurrentProfile() || {};
+      let avatar = profile.avatar;
+      if (!avatar) {
+        avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(profile.name || 'User')}&background=e0e7ff&color=7b2ff2&size=64`;
+      }
+      d.repliesList.push({
+        author: profile.name || 'Anonymous',
+        avatar: avatar,
+        text,
+        date: new Date().toISOString()
+      });
+      d.replies = d.repliesList.length;
+      setDiscussions(discussions);
+      closeReplyModal();
+      renderDiscussions();
+    }
+
+    function timeAgo(dateString) {
+      const now = new Date();
+      const date = new Date(dateString);
+      const seconds = Math.floor((now - date) / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      if (seconds < 60) return `${seconds} sec${seconds !== 1 ? 's' : ''} ago`;
+      if (minutes < 60) return `${minutes} min${minutes !== 1 ? 's' : ''} ago`;
+      if (hours < 24) return `${hours} hr${hours !== 1 ? 's' : ''} ago`;
+      return `${days} day${days !== 1 ? 's' : ''} ago`;
+    }
+
+    function openReportModal(idx) {
+      reportDiscussionIdx = idx;
+      document.getElementById('reportReason').value = '';
+      document.getElementById('reportDetails').value = '';
+      document.getElementById('reportModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('reportReason').focus();
+      }, 50);
+    }
+    function closeReportModal() {
+      document.getElementById('reportModal').classList.remove('show');
+      reportDiscussionIdx = null;
+    }
+    function submitReport() {
+      const reason = document.getElementById('reportReason').value;
+      const details = document.getElementById('reportDetails').value.trim();
+      if (!reason) {
+        showToast('Please select a reason.');
+        return;
+      }
+      // You can send this to your backend or just show a thank you message for demo
+      closeReportModal();
+      showToast('Thank you for your report. Our moderators will review it.');
+      let discussions = getDiscussions();
+      // If reporting a reply
+      if (reportReplyDiscussionIdx !== null && reportReplyIdx !== null) {
+        if (
+          discussions[reportReplyDiscussionIdx] &&
+          discussions[reportReplyDiscussionIdx].repliesList &&
+          discussions[reportReplyDiscussionIdx].repliesList[reportReplyIdx]
+        ) {
+          discussions[reportReplyDiscussionIdx].repliesList[reportReplyIdx].reported = true;
+          setDiscussions(discussions);
+        }
+        reportReplyDiscussionIdx = null;
+        reportReplyIdx = null;
+        return;
+      }
+      // If reporting a discussion
+      if (discussions[reportDiscussionIdx]) {
+        discussions[reportDiscussionIdx].reported = true;
+        setDiscussions(discussions);
+      }
+      reportDiscussionIdx = null;
+    }
+
+    // Hide the form by default, show it when button is clicked
+    document.addEventListener('DOMContentLoaded', function() {
+      const btn = document.getElementById('showStartDiscussionBtn');
+      const section = document.getElementById('newDiscussionSection');
+      if (btn && section) {
+        btn.onclick = function() {
+          section.style.display = '';
+          section.scrollIntoView({behavior: "smooth"});
+          document.getElementById('discussionTitle').focus();
+          btn.style.display = 'none';
+        };
+      }
+      // Hide the form after submit and show the button again:
+      const form = document.getElementById('discussionForm');
+      if (form) {
+        form.addEventListener('submit', function() {
+          setTimeout(() => {
+            section.style.display = 'none';
+            btn.style.display = '';
+          }, 300);
+        });
+      }
+    });
+    // Show the modal when Start Discussion is clicked
+    document.getElementById('showStartDiscussionBtn').onclick = function() {
+      document.getElementById('startDiscussionModal').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('discussionTitle').focus();
+      }, 100);
+    };
+    // Hide the modal
+    function closeStartDiscussionModal() {
+      document.getElementById('startDiscussionModal').classList.remove('show');
+      document.getElementById('discussionForm').reset();
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+      selectedTag = null;
+    }
+    // Hide modal on form submit and show toast (your existing logic)
+    document.getElementById('discussionForm').onsubmit = function(e) {
+      e.preventDefault();
+      const title = document.getElementById('discussionTitle').value.trim();
+      const content = document.getElementById('discussionContent').value.trim();
+      if (!title || !content) return;
+      const profile = getCurrentProfile() || {};
+      const discussions = getDiscussions();
+      discussions.push({
+        title,
+        content,
+        tag: selectedTag,
+        authorName: profile.name || 'Anonymous',
+        avatar: profile.avatar || '',
+        createdAt: new Date().toISOString(),
+        likes: 0,
+        liked: false,
+        replies: 0,
+        repliesList: []
+      });
+      setDiscussions(discussions);
+      document.getElementById('discussionForm').reset();
+      document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+      selectedTag = null;
+      closeStartDiscussionModal();
+      renderDiscussions();
+      showToast('Discussion posted!');
+    };
+
+    // Use this in a <script> tag on dashboard.html or profile.html
+    const userName = localStorage.getItem('userName') || 'User';
+    const userEmail = localStorage.getItem('currentUserEmail') || '';
+    document.getElementById('profileName').textContent = userName;
+    document.getElementById('profileEmail').textContent = userEmail;
+
+    // Set study-themed backgrounds for each tab/page
+    // ...existing code...
+    // document.body.style.backgroundImage = `url('${backgrounds[page]}')`;
+    // document.body.style.backgroundImage = "none";
+  </script>
+</body>
+</html>
